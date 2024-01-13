@@ -1,0 +1,33 @@
+{
+  "required": true,
+  "package": "noppes.npcs.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "customnpcs.refmap.json",
+  "mixins": [
+    "CCreativeInventoryActionPacketMixin",
+    "DelegatingResourcePackMixin",
+    "IceBlockMixin",
+    "LeavesBlockMixin",
+    "ListNBTMixin",
+    "NoiseChunkGeneratorMixin",
+    "ProtocolTypeMixin",
+    "ScoreBoardMixin",
+    "VineBlockMixin"
+  ],
+  "client": [
+    "AgeableModelMixin",
+    "ArmorLayerMixin",
+    "BipedBodyMixin",
+    "ClientPlayNetHandlerMixin",
+    "ItemModelMesherMixin",
+    "LegacyResourcePackWrapperMixin",
+    "LivingRendererMixin",
+    "MatrixStackMixin",
+    "ModelRendererMixin",
+    "MouseHelperMixin",
+    "ParticleManagerMixin",
+    "SimpleReloadableResourceManagerMixin",
+    "SimpleReloadableResourceManagerMixin2"
+  ],
+  "minVersion": "0.8"
+}
