@@ -141,7 +141,7 @@ public class NoppesUtilServer
         final CommandSource commandSource = new CommandSource(icommandsender, point, Vector2f.ZERO, (ServerWorld)level, permLvl, "@CustomNPCs-" + name, new StringTextComponent("@CustomNPCs-" + name), level.getServer(), executer) {
             public void sendFailure(final ITextComponent text) {
                 super.sendFailure(text);
-                NoppesUtilServer.NotifyOPs((TextComponent)text);
+                NoppesUtilServer.NotifyOPs(text instanceof TextComponent ? (TextComponent) text : new TranslationTextComponent(text.getString()));
             }
         };
         final Commands icommandmanager = level.getServer().getCommands();
