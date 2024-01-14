@@ -2,6 +2,7 @@ package noppes.npcs.api.wrapper;
 
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementProgress;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -22,6 +23,7 @@ import noppes.npcs.EventHooks;
 import noppes.npcs.NoppesUtilServer;
 import noppes.npcs.api.*;
 import noppes.npcs.api.block.IBlock;
+import noppes.npcs.api.entity.ICustomNpc;
 import noppes.npcs.api.entity.IPlayer;
 import noppes.npcs.api.entity.data.IData;
 import noppes.npcs.api.entity.data.IPixelmonPlayerData;
@@ -36,6 +38,7 @@ import noppes.npcs.containers.ContainerCustomGui;
 import noppes.npcs.controllers.*;
 import noppes.npcs.controllers.data.*;
 import noppes.npcs.entity.EntityDialogNpc;
+import noppes.npcs.entity.EntityNPCInterface;
 import noppes.npcs.packets.Packets;
 import noppes.npcs.packets.client.*;
 import noppes.npcs.packets.server.SPacketDimensionTeleport;
@@ -253,6 +256,18 @@ public class PlayerWrapper<T extends ServerPlayerEntity> extends EntityLivingBas
         option.title = dialog.title;
         npc.dialogs.put(0, option);
         NoppesUtilServer.openDialog(this.entity, npc, dialog);
+    }
+
+    public void showDialog(int id, ICustomNpc npc) {
+        Dialog dialog = DialogController.instance.dialogs.get(id);
+        if (dialog == null) {
+            throw new CustomNPCsException("Unknown Dialog id: " + id);
+        } else if (dialog.availability.isAvailable(this.entity)) {
+            DialogOption option = new DialogOption();
+            option.dialogId = id;
+            option.title = dialog.title;
+            NoppesUtilServer.openDialog(this.entity, (EntityNPCInterface) npc.getMCEntity(), dialog);
+        }
     }
 
     @Override
