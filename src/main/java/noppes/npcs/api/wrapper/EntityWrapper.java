@@ -328,7 +328,7 @@ public class EntityWrapper<T extends Entity> implements IEntity
         final List<Entity> list = this.entity.level.getEntities(this.entity, this.entity.getBoundingBox().inflate(distance));
         final List<IEntity> result = new ArrayList<>();
         for (final Entity entity1 : list) {
-            if (entity1.canBeCollidedWith() && entity1 != this.entity) {
+            if (entity1 != this.entity) {
                 final AxisAlignedBB axisalignedbb = entity1.getBoundingBox().inflate(entity1.getPickRadius());
                 final Optional<Vector3d> optional = axisalignedbb.clip(vec3d, vec3d1);
                 if (!optional.isPresent()) {
