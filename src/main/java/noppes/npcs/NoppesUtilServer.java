@@ -159,7 +159,7 @@ public class NoppesUtilServer
         }
         item.shrink(1);
         if (item.getCount() <= 0) {
-            player.setItemInHand(Hand.MAIN_HAND, null);
+            player.setItemInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
         }
     }
 
