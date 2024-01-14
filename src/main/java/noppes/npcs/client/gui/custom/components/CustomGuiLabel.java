@@ -51,6 +51,18 @@ public class CustomGuiLabel extends GuiLabel implements IGuiComponent
     }
 
     @Override
+    public void render(MatrixStack stack, int mouseX, int mouseY, float partialTick) {
+        if (this.enabled) {
+            this.drawBox(stack);
+            if (this.centered) {
+                Minecraft.getInstance().font.draw(stack, this.getMessage(), ((float)this.x + (float)(this.width - Minecraft.getInstance().font.width(this.getMessage())) / 2.0F)/scale, (float)this.y/scale, this.textColor);
+            } else {
+                Minecraft.getInstance().font.draw(stack, this.getMessage(), (float)this.x/scale, (float)this.y/scale, this.textColor);
+            }
+        }
+    }
+
+    @Override
     public int getID() {
         return this.id;
     }

@@ -10,10 +10,10 @@ import net.minecraft.util.text.*;
 public class GuiLabel extends Widget implements IGuiEventListener
 {
     public int id;
-    private boolean centered;
+    protected boolean centered;
     public boolean enabled;
     private boolean labelBgEnabled;
-    private final int textColor;
+    protected final int textColor;
     private int backColor;
     private int ulColor;
     private int brColor;
