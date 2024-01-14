@@ -79,7 +79,14 @@ public abstract class CustomGuiComponentWrapper implements ICustomGuiComponent
     }
 
     public ICustomGuiComponent setHoverText(final List<TranslationTextComponent> list) {
-        this.hoverText = list;
+        this.hoverText = new ArrayList<>();
+        for(Object obj:list){
+            if(obj instanceof TranslationTextComponent){
+                hoverText.add((TranslationTextComponent) obj);
+            }else{
+                hoverText.add(new TranslationTextComponent(String.valueOf(obj)));
+            }
+        }
         return this;
     }
 
