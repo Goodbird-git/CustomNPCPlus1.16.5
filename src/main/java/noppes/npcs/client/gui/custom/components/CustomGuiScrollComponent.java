@@ -44,7 +44,6 @@ public class CustomGuiScrollComponent extends GuiCustomScroll implements IGuiCom
     @Override
     public void onRender(final MatrixStack matrixStack, final int mouseX, final int mouseY, final float partialTicks) {
         matrixStack.pushPose();
-        matrixStack.translate(0.0, 0.0, (double)this.id);
         final boolean hovered = mouseX >= this.guiLeft && mouseY >= this.guiTop && mouseX < this.guiLeft + this.getWidth() && mouseY < this.guiTop + this.getHeight();
         super.render(matrixStack, mouseX, mouseY, partialTicks);
         if (hovered && this.component.hasHoverText()) {

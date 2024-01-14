@@ -26,6 +26,7 @@ import noppes.npcs.shared.client.gui.components.GuiCustomScroll;
 import noppes.npcs.shared.client.gui.listeners.ICustomScrollListener;
 import noppes.npcs.shared.client.gui.listeners.IGuiData;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,7 +74,10 @@ public class GuiCustom extends ContainerScreen<ContainerCustomGui> implements IC
         if (this.background != null) {
             this.drawBackgroundTexture(matrixStack);
         }
-        for (final IGuiComponent component : this.components.values()) {
+        Object[] comps = this.components.values().stream().sorted(Comparator.comparingInt(IGuiComponent::getID)).toArray();
+
+        for(Object obj : comps) {
+            IGuiComponent component = (IGuiComponent)obj;
             component.onRender(matrixStack, mouseX, mouseY, partialTicks);
         }
         if (this.hoverText != null && !this.hoverText.isEmpty()) {

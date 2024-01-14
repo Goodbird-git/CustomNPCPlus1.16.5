@@ -30,7 +30,6 @@ public class CustomGuiTextField extends TextFieldWidget implements IGuiComponent
 
     public void onRender(final MatrixStack matrixStack, final int mouseX, final int mouseY, final float partialTicks) {
         matrixStack.pushPose();
-        matrixStack.translate(0.0, 0.0, (double)this.id);
         final boolean hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
         this.renderButton(matrixStack, mouseX, mouseY, partialTicks);
         if (hovered && this.component.hasHoverText()) {

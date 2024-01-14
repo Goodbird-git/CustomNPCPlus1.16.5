@@ -52,7 +52,6 @@ public class CustomGuiButton extends Button implements IGuiComponent
 
     public void onRender(final MatrixStack matrixStack, final int mouseX, final int mouseY, final float partialTicks) {
         matrixStack.pushPose();
-        matrixStack.translate(0.0, 0.0, (double)this.id);
         final Minecraft mc = Minecraft.getInstance();
         final FontRenderer font = mc.font;
         if (this.texture == null) {

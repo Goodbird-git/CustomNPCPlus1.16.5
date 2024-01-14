@@ -22,7 +22,6 @@ public class CustomGuiTextArea extends GuiTextArea implements IGuiComponent
     @Override
     public void onRender(final MatrixStack matrixStack, final int mouseX, final int mouseY, final float partialTicks) {
         matrixStack.pushPose();
-        matrixStack.translate(0.0, 0.0, (double)this.id);
         final boolean hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
         super.render(matrixStack, mouseX, mouseY);
         if (hovered && this.component.hasHoverText()) {
