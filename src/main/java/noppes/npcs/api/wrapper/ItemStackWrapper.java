@@ -516,7 +516,7 @@ public class ItemStackWrapper implements IItemStack, ICapabilitySerializable<Com
     }
 
     public CompoundNBT getMCNbt() {
-        final CompoundNBT compound = new CompoundNBT();
+        final CompoundNBT compound = item.getOrCreateTag();
         if (!this.storedData.isEmpty()) {
             compound.put("StoredData", this.storedData);
         }
@@ -524,6 +524,7 @@ public class ItemStackWrapper implements IItemStack, ICapabilitySerializable<Com
     }
 
     public void setMCNbt(final CompoundNBT compound) {
+        item.setTag(compound);
         this.storedData = compound.getCompound("StoredData");
     }
 
