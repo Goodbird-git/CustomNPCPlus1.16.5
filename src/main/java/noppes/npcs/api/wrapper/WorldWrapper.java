@@ -29,6 +29,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.Explosion;
+import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerChunkProvider;
 import net.minecraft.world.server.ServerWorld;
@@ -360,6 +361,15 @@ public class WorldWrapper implements IWorld
     @Override
     public float getLightValue(final int x, final int y, final int z) {
         return this.level.getLightEmission(new BlockPos(x, y, z)) / 16.0f;
+    }
+
+    public float getLightLevel(final int x, final int y, final int z){
+        BlockPos pos = new BlockPos(x,y,z);
+        int blockLight = level.getBrightness(LightType.BLOCK,pos);
+        int skyLight = level.getBrightness(LightType.SKY,pos);
+        int skyDarken = level.getSkyDarken();
+        float skyLightValue = (11f-skyDarken)*15f/11f;
+        return Math.max(blockLight, skyLight/15f*skyLightValue);
     }
 
     @Override
