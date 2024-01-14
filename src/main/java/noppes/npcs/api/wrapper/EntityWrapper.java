@@ -9,6 +9,7 @@ import net.minecraft.nbt.NumberNBT;
 import net.minecraft.network.IPacket;
 import net.minecraft.network.play.server.SAnimateHandPacket;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.*;
 import net.minecraft.util.math.vector.Vector3d;
@@ -576,5 +577,12 @@ public class EntityWrapper<T extends Entity> implements IEntity
         }
         this.entity.setDeltaMovement(mo.x, mo.y, motion);
         this.entity.hurtMarked = true;
+    }
+
+    public void damage(float damage, IEntity source) {
+        if(source.getType() == 1)
+            entity.hurt(new EntityDamageSource("player",source.getMCEntity()),damage);
+        else
+            entity.hurt(new EntityDamageSource(source.getTypeName(),source.getMCEntity()),damage);
     }
 }
