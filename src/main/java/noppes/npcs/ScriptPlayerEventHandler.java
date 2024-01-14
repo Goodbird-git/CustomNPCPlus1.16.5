@@ -43,13 +43,11 @@ import noppes.npcs.packets.Packets;
 import noppes.npcs.packets.client.PacketItemUpdate;
 import noppes.npcs.shared.common.util.LogWriter;
 
+import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
+import java.util.*;
 
 
 public class ScriptPlayerEventHandler
@@ -328,7 +326,18 @@ public class ScriptPlayerEventHandler
             final Method register = MinecraftForge.EVENT_BUS.getClass().getDeclaredMethod("register", Class.class, Object.class, Method.class);
             register.setAccessible(true);
             final HashSet<Class> classes = new HashSet<>();
-            final Field f = ClassLoader.class.getDeclaredField("classes");
+            final Method getDeclaredFields0 = Class.class.getDeclaredMethod("getDeclaredFields0", Boolean.TYPE);
+            getDeclaredFields0.setAccessible(true);
+            final Field[] fields = (Field[]) getDeclaredFields0.invoke(ClassLoader.class, false);
+            Field f = null;
+            for (final Object each : fields) {
+                if ("classes".equals(((Field)each).getName())) {
+                    f = (Field) each;
+                }
+            }
+            if (f == null) {
+                throw new AssertionError();
+            }
             f.setAccessible(true);
             for (ClassLoader loader = PlayerContainerEvent.Open.class.getClassLoader(); loader != null; loader = loader.getParent()) {
                 for (final Class c : new ArrayList<Class>((Collection<? extends Class>)f.get(loader))) {
