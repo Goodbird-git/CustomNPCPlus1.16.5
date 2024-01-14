@@ -223,7 +223,9 @@ public class CustomGuiWrapper implements ICustomGui
             Packets.send(player.getMCEntity(), new PacketGuiData(this.toNBT()));
         }
     }
-
+    public void updateSlots(IPlayer player) {
+        ((ContainerCustomGui)(player.getMCEntity()).containerMenu).setGui(this, player.getMCEntity());
+    }
     public boolean getShowPlayerInv() {
         return this.showPlayerInv;
     }
