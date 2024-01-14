@@ -97,4 +97,11 @@ public class ContainerCustomGui extends Container
             this.addSlot(new Slot(player.inventory, row, x + row * 18, y + 58));
         }
     }
+
+    @Override
+    public void setItem(int p_75141_1_, ItemStack p_75141_2_){
+        if(slots.size()>p_75141_1_){
+            super.setItem(p_75141_1_,p_75141_2_);
+        }
+    }
 }
