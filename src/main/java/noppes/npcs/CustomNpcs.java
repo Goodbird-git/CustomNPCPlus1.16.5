@@ -103,6 +103,8 @@ public class CustomNpcs
     public static boolean EnableInvisibleNpcs;
     @ConfigProp
     public static boolean NpcSpeachTriggersChatEvent;
+    @ConfigProp(info = "Enable new dialog and quest GUI which allow accepting and rejecting quests")
+    public static boolean EnableNewDialogSystem;
     public static ConfigLoader Config;
     public static boolean VerboseDebug;
     public static MinecraftServer Server;
@@ -334,5 +336,6 @@ public class CustomNpcs
         CustomNpcs.EnableInvisibleNpcs = true;
         CustomNpcs.NpcSpeachTriggersChatEvent = false;
         CustomNpcs.VerboseDebug = false;
+        CustomNpcs.EnableNewDialogSystem = false;
     }
 }
