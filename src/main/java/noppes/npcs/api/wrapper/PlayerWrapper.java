@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.NumberNBT;
+import net.minecraft.nbt.StringNBT;
 import net.minecraft.network.play.server.SSetSlotPacket;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvents;
@@ -17,6 +18,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.GameType;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.ForgeRegistries;
 import noppes.npcs.CustomNpcsPermissions;
 import noppes.npcs.EventHooks;
@@ -44,8 +46,10 @@ import noppes.npcs.packets.client.*;
 import noppes.npcs.packets.server.SPacketDimensionTeleport;
 import noppes.npcs.shared.client.util.NoppesStringUtils;
 import noppes.npcs.util.ValueUtil;
+import ru.noxus.rpghud.utils.StatsHelper;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class PlayerWrapper<T extends ServerPlayerEntity> extends EntityLivingBaseWrapper<T> implements IPlayer
@@ -59,55 +63,52 @@ public class PlayerWrapper<T extends ServerPlayerEntity> extends EntityLivingBas
     public PlayerWrapper(final T player) {
         super(player);
         this.storeddata = new IData() {
-            @Override
-            public void put(final String key, final Object value) {
-                final CompoundNBT compound = this.getStoredCompound();
+            public void put(String key, Object value) {
+                CompoundNBT compound = this.getStoredCompound();
                 if (value instanceof Number) {
                     compound.putDouble(key, ((Number)value).doubleValue());
-                }
-                else if (value instanceof String) {
+                    if (ModList.get().isLoaded("rpg_hud")) {
+                        if (Arrays.asList(StatsHelper.statsNames).contains(key)) {
+                            StatsHelper.init(entity);
+                        }
+                    }
+                } else if (value instanceof String) {
                     compound.putString(key, (String)value);
                 }
+
             }
 
-            @Override
-            public Object get(final String key) {
-                final CompoundNBT compound = this.getStoredCompound();
+            public Object get(String key) {
+                CompoundNBT compound = this.getStoredCompound();
                 if (!compound.contains(key)) {
                     return null;
+                } else {
+                    INBT base = compound.get(key);
+                    return base instanceof NumberNBT ? ((NumberNBT)base).getAsDouble() : base.getAsString();
                 }
-                final INBT base = compound.get(key);
-                if (base instanceof NumberNBT) {
-                    return ((NumberNBT)base).getAsDouble();
-                }
-                return base.getAsString();
             }
 
-            @Override
-            public void remove(final String key) {
-                final CompoundNBT compound = this.getStoredCompound();
+            public void remove(String key) {
+                CompoundNBT compound = this.getStoredCompound();
                 compound.remove(key);
             }
 
-            @Override
-            public boolean has(final String key) {
+            public boolean has(String key) {
                 return this.getStoredCompound().contains(key);
             }
 
-            @Override
             public void clear() {
-                final PlayerData data = PlayerData.get(PlayerWrapper.this.entity);
+                PlayerData data = PlayerData.get(PlayerWrapper.this.entity);
                 data.scriptStoreddata = new CompoundNBT();
             }
 
             private CompoundNBT getStoredCompound() {
-                final PlayerData data = PlayerData.get(PlayerWrapper.this.entity);
+                PlayerData data = PlayerData.get(PlayerWrapper.this.entity);
                 return data.scriptStoreddata;
             }
 
-            @Override
             public String[] getKeys() {
-                final CompoundNBT compound = this.getStoredCompound();
+                CompoundNBT compound = this.getStoredCompound();
                 return compound.getAllKeys().toArray(new String[compound.getAllKeys().size()]);
             }
         };

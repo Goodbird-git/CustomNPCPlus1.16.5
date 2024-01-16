@@ -1,5 +1,6 @@
 package noppes.npcs.api.wrapper;
 
+import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -16,12 +17,14 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.LanguageMap;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.fml.ModList;
 import noppes.npcs.api.*;
 import noppes.npcs.api.entity.IEntity;
 import noppes.npcs.api.entity.IEntityItem;
 import noppes.npcs.api.entity.data.IData;
 import noppes.npcs.api.item.IItemStack;
 import noppes.npcs.controllers.ServerCloneController;
+import ru.noxus.rpghud.utils.StatusHelper;
 
 import java.util.*;
 
@@ -36,34 +39,44 @@ public class EntityWrapper<T extends Entity> implements IEntity
     public EntityWrapper(final T entity) {
         this.tempData = new HashMap<>();
         this.tempdata = new IData() {
-            @Override
-            public void put(final String key, final Object value) {
+            public void put(String key, Object value) {
+                if (ModList.get().isLoaded("rpg_hud")) {
+                    if (value instanceof Number) {
+                        String hudKey = key.replaceAll("BuildUp", "");
+                        if (Arrays.asList(StatusHelper.statusNames).contains(hudKey)) {
+                            StatusHelper.setStatus(entity, hudKey, ((Number) value).intValue());
+                        }
+                    } else {
+                        if (key.equals("StatusResistances")) {
+                            Set<Map.Entry<String, Object>> entrySet = ((ScriptObjectMirror) value).entrySet();
+                            StatusHelper.setMaxStatus(entity, entrySet);
+                        }
+                    }
+                }
                 EntityWrapper.this.tempData.put(key, value);
             }
 
-            @Override
-            public Object get(final String key) {
+            public Object get(String key) {
                 return EntityWrapper.this.tempData.get(key);
             }
 
-            @Override
-            public void remove(final String key) {
+            public void remove(String key) {
+                if (key.equals("StatusResistances")) {
+                    StatusHelper.setMaxStatus(entity, null);
+                }
                 EntityWrapper.this.tempData.remove(key);
             }
 
-            @Override
-            public boolean has(final String key) {
+            public boolean has(String key) {
                 return EntityWrapper.this.tempData.containsKey(key);
             }
 
-            @Override
             public void clear() {
                 EntityWrapper.this.tempData.clear();
             }
 
-            @Override
             public String[] getKeys() {
-                return EntityWrapper.this.tempData.keySet().toArray(new String[0]);
+                return EntityWrapper.this.tempData.keySet().toArray(new String[EntityWrapper.this.tempData.size()]);
             }
         };
         this.storeddata = new IData() {
