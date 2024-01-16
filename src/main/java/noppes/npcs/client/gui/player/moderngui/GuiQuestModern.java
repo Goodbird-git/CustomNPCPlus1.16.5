@@ -2,6 +2,7 @@ package noppes.npcs.client.gui.player.moderngui;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.sun.java.accessibility.util.java.awt.TextComponentTranslator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.widget.button.ImageButton;
@@ -15,6 +16,8 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import noppes.npcs.CustomNpcs;
 import noppes.npcs.api.handler.data.IQuestObjective;
 import noppes.npcs.api.item.IItemStack;
@@ -165,7 +168,7 @@ public class GuiQuestModern extends GuiNPCInterface implements IGuiClose {
         }
         if(quest.rewardExp!=0) {
             AbstractGui.drawString(matrixStack, font, translate("questgui.experience"), 690, topToRewardsBottom, 0xb8b8b8);
-            int expPosX = 690+ClientProxy.Font.width(translate("questgui.experience"));
+            int expPosX = 690+ClientProxy.Font.width(translate("questgui.experience")+"     ");
             AbstractGui.drawString(matrixStack, font, ""+quest.rewardExp, expPosX, topToRewardsBottom, -1);
             int expSymbolPosX = expPosX+ClientProxy.Font.width(quest.rewardExp+"  ");
             this.minecraft.getTextureManager().bind(decomposed);
@@ -190,8 +193,10 @@ public class GuiQuestModern extends GuiNPCInterface implements IGuiClose {
         this.buttons.get(0).y=topToFactionBottom;
         this.buttons.get(1).y=topToFactionBottom;
         super.render(matrixStack, (int) ((double)mouseX/wcoeff), (int) ((double)mouseY/wcoeff), partialTicks);
-        AbstractGui.drawString(matrixStack, font, "questgui.reject", 736, topToFactionBottom+6, -1);
-        AbstractGui.drawString(matrixStack, font, "questgui.accept", 830, topToFactionBottom+6, -1);
+        String reject = translate("questgui.reject");
+        AbstractGui.drawString(matrixStack, font, reject, 753-ClientProxy.Font.width(reject)/2, topToFactionBottom+6, -1);
+        String accept = translate("questgui.accept");
+        AbstractGui.drawString(matrixStack, font, accept, 847-ClientProxy.Font.width(accept)/2, topToFactionBottom+6, -1);
         matrixStack.popPose();
     }
 
