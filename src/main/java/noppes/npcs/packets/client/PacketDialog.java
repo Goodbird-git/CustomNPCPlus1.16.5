@@ -1,5 +1,7 @@
 package noppes.npcs.packets.client;
 
+import noppes.npcs.client.gui.player.moderngui.GuiDialogModern;
+import noppes.npcs.client.gui.player.moderngui.GuiQuestModern;
 import noppes.npcs.shared.common.*;
 import net.minecraft.network.*;
 import net.minecraft.client.*;
@@ -46,7 +48,15 @@ public class PacketDialog extends PacketBasic
     public static void openDialog(final Dialog dialog, final EntityNPCInterface npc, final PlayerEntity player) {
         final Screen gui = Minecraft.getInstance().screen;
         if (!(gui instanceof GuiDialogInteract)) {
-            CustomNpcs.proxy.openGui(player, new GuiDialogInteract(npc, dialog));
+            if(!CustomNpcs.EnableNewDialogSystem){
+                CustomNpcs.proxy.openGui(player, new GuiDialogInteract(npc, dialog));
+            }else{
+                if(!(gui instanceof GuiQuestModern) && dialog.hasQuest()){
+                    CustomNpcs.proxy.openGui(player, new GuiQuestModern(npc, dialog.getQuest(), dialog, -2));
+                }else{
+                    CustomNpcs.proxy.openGui(player, new GuiDialogModern(npc, dialog));
+                }
+            }
         }
         else {
             final GuiDialogInteract dia = (GuiDialogInteract)gui;
