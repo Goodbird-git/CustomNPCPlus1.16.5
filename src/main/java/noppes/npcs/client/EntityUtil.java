@@ -6,6 +6,7 @@ import net.minecraft.entity.player.*;
 import net.minecraft.inventory.*;
 import net.minecraft.entity.boss.dragon.*;
 import net.minecraft.entity.passive.*;
+import noppes.npcs.client.renderer.RenderNPCInterface;
 import noppes.npcs.entity.*;
 import net.minecraft.world.*;
 import net.minecraftforge.registries.*;
@@ -117,6 +118,15 @@ public class EntityUtil
             final EntityCustomNpc npc2 = (EntityCustomNpc)copied;
             final EntityCustomNpc target2 = (EntityCustomNpc)entity;
             (target2.modelData = npc2.modelData.copy()).setEntity((String)null);
+        }
+        if(entity instanceof EntityCustomModel && copied instanceof EntityNPCInterface){
+            ((EntityCustomModel) entity).textureResLoc= RenderNPCInterface.getNpcTexture((EntityNPCInterface) copied);
+            ((EntityCustomModel) entity).modelResLoc=new ResourceLocation(((EntityNPCInterface) copied).display.customModelData.getModel());
+            ((EntityCustomModel) entity).animResLoc=new ResourceLocation(((EntityNPCInterface) copied).display.customModelData.getAnimFile());
+            ((EntityCustomModel) entity).idleAnim=((EntityNPCInterface) copied).display.customModelData.getIdleAnim();
+            if(((EntityNPCInterface) copied).inventory.getLeftHand()!=null){
+                ((EntityCustomModel) entity).leftHeldItem=((EntityNPCInterface) copied).inventory.getLeftHand().getMCItemStack();
+            }
         }
     }
 
