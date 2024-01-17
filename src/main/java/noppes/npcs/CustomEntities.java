@@ -1,5 +1,6 @@
 package noppes.npcs;
 
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraftforge.fml.common.*;
 import net.minecraft.entity.projectile.*;
 import net.minecraftforge.event.*;
@@ -37,6 +38,8 @@ public class CustomEntities
     public static EntityType<?> entityChairMount;
     @ObjectHolder("customnpcprojectile")
     public static EntityType<? extends ThrowableEntity> entityProjectile;
+    @ObjectHolder("custommodelentity")
+    public static EntityType<? extends EntityCustomModel> entityCustomModel;
     private static List<EntityType> types;
 
     @SubscribeEvent
@@ -53,6 +56,7 @@ public class CustomEntities
         registerNpc(event.getRegistry(), EntityNpcClassicPlayer.class, "customnpcclassic", EntityNpcClassicPlayer::new);
         registerNewentity(event.getRegistry(), EntityChairMount.class, "customnpcchairmount", EntityChairMount::new, 64, 10, false, 0.001f, 0.001f);
         registerNewentity(event.getRegistry(), EntityProjectile.class, "customnpcprojectile", EntityProjectile::new, 64, 20, true, 0.5f, 0.5f);
+        registerNewentity(event.getRegistry(), EntityCustomModel.class, "custommodelentity", EntityCustomModel::new, 64, 10, false, 0.7F, 2F);
     }
 
     @SubscribeEvent
@@ -60,6 +64,7 @@ public class CustomEntities
         for (final EntityType type : CustomEntities.types) {
             event.put(type, EntityNPCInterface.createMobAttributes().build());
         }
+        event.put(entityCustomModel, LivingEntity.createLivingAttributes().add(Attributes.FOLLOW_RANGE).build());
     }
 
     private static <T extends Entity> void registerNpc(final IForgeRegistry<EntityType<?>> registry, final Class<? extends Entity> c, final String name, final EntityType.IFactory<T> factoryIn) {
