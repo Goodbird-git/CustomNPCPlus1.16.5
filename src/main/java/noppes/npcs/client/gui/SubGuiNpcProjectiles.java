@@ -15,7 +15,7 @@ public class SubGuiNpcProjectiles extends GuiBasic implements ITextfieldListener
     private final String[] trailNames;
 
     public SubGuiNpcProjectiles(final DataRanged stats) {
-        this.trailNames = new String[] { "gui.none", "Smoke", "Portal", "Redstone", "Lightning", "LargeSmoke", "Magic", "Enchant", "Lava", "Campfire Cosy Smoke",
+        this.trailNames = new String[] { "gui.none", "Smoke", "Portal", "Redstone", "Lightning", "LargeSmoke", "Magic", "Enchant", "Crit", "Lava", "Campfire Cosy Smoke",
                                         "Campfire Signal Smoke", "Bubble Pop", "Sneeze"};
         this.stats = stats;
         this.setBackground("menubg.png");
