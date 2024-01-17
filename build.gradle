@@ -78,6 +78,7 @@ mixin {
 dependencies {
     minecraft 'net.minecraftforge:forge:1.16.5-36.2.39'
     compileOnly name: archivesBaseName+'-deobf'
+    implementation fg.deobf('lib:geckolib-forge-1.16.5:3.0.106')
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }
 
