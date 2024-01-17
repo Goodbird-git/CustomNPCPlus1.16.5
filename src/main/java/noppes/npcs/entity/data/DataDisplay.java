@@ -47,7 +47,7 @@ public class DataDisplay implements INPCDisplay
     private byte hitboxState;
     private byte showBossBar;
     private BossInfo.Color bossColor;
-
+    public CustomModelData customModelData;
     public DataDisplay(final EntityNPCInterface npc) {
         this.name = "Noppes";
         this.title = "";
@@ -80,6 +80,7 @@ public class DataDisplay implements INPCDisplay
                 this.texture = p.skin;
             }
         }
+        customModelData = new CustomModelData();
     }
 
     public String getRandomName() {
@@ -110,6 +111,7 @@ public class DataDisplay implements INPCDisplay
         nbttagcompound.putByte("IsStatue", this.hitboxState);
         nbttagcompound.putByte("BossBar", this.showBossBar);
         nbttagcompound.putInt("BossColor", this.bossColor.ordinal());
+        customModelData.writeToNBT(nbttagcompound);
         return nbttagcompound;
     }
 
@@ -155,6 +157,7 @@ public class DataDisplay implements INPCDisplay
         this.npc.textureGlowLocation = null;
         this.npc.textureCloakLocation = null;
         this.npc.refreshDimensions();
+        this.customModelData.readFromNBT(nbttagcompound);
     }
 
     public void loadProfile() {
