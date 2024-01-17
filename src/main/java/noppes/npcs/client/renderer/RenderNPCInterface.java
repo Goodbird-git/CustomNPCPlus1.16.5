@@ -171,51 +171,55 @@ public class RenderNPCInterface<T extends EntityNPCInterface, M extends EntityMo
         }
         return super.getBob(npc, limbSwingAmount);
     }
-
-    public ResourceLocation getTextureLocation(final T npc) {
+    public static ResourceLocation getNpcTexture(EntityNPCInterface npc) {
         if (npc.textureLocation == null) {
             if (npc.display.skinType == 0) {
                 npc.textureLocation = new ResourceLocation(npc.display.getSkinTexture());
-            }
-            else {
-                if (RenderNPCInterface.LastTextureTick < 5) {
+            } else {
+                if (LastTextureTick < 5) {
                     return DefaultPlayerSkin.getDefaultSkin();
                 }
+
                 if (npc.display.skinType == 1 && npc.display.playerProfile != null) {
-                    final Minecraft minecraft = Minecraft.getInstance();
-                    final Map map = minecraft.getSkinManager().getInsecureSkinInformation(npc.display.playerProfile);
+                    Minecraft minecraft = Minecraft.getInstance();
+                    Map map = minecraft.getSkinManager().getInsecureSkinInformation(npc.display.playerProfile);
                     if (map.containsKey(MinecraftProfileTexture.Type.SKIN)) {
                         npc.textureLocation = minecraft.getSkinManager().registerTexture((MinecraftProfileTexture)map.get(MinecraftProfileTexture.Type.SKIN), MinecraftProfileTexture.Type.SKIN);
                     }
-                }
-                else if (npc.display.skinType == 2) {
+                } else if (npc.display.skinType == 2) {
                     try {
                         String size = "";
                         if (npc instanceof EntityCustomNpc && ((EntityCustomNpc)npc).modelData.getEntity(npc) != null) {
                             size = "32";
                         }
-                        final MessageDigest digest = MessageDigest.getInstance("MD5");
-                        final byte[] hash = digest.digest((npc.display.getSkinUrl() + size).getBytes("UTF-8"));
-                        final StringBuilder sb = new StringBuilder(2 * hash.length);
-                        for (final byte b : hash) {
-                            sb.append(String.format("%02x", b & 0xFF));
+
+                        MessageDigest digest = MessageDigest.getInstance("MD5");
+                        byte[] hash = digest.digest((npc.display.getSkinUrl() + size).getBytes("UTF-8"));
+                        StringBuilder sb = new StringBuilder(2 * hash.length);
+                        byte[] var6 = hash;
+                        int var7 = hash.length;
+
+                        for(int var8 = 0; var8 < var7; ++var8) {
+                            byte b = var6[var8];
+                            sb.append(String.format("%02x", b & 255));
                         }
-                        this.loadSkin(null, npc.textureLocation = new ResourceLocation("customnpcs", "skins/" + sb + size), npc.display.getSkinUrl(), !size.isEmpty());
-                    }
-                    catch (Exception ex) {
-                        ex.printStackTrace();
+
+                        npc.textureLocation = new ResourceLocation("customnpcs", "skins/" + sb + size);
+                        loadSkin((File)null, npc.textureLocation, npc.display.getSkinUrl(), !size.isEmpty());
+                    } catch (Exception var10) {
+                        var10.printStackTrace();
                     }
                 }
             }
         }
-        if (npc.textureLocation == null) {
-            return DefaultPlayerSkin.getDefaultSkin();
-        }
-        return npc.textureLocation;
-    }
 
-    private void loadSkin(final File file, final ResourceLocation resource, final String par1Str, final boolean fix64) {
-        final TextureManager texturemanager = Minecraft.getInstance().getTextureManager();
+        return npc.textureLocation == null ? DefaultPlayerSkin.getDefaultSkin() : npc.textureLocation;
+    }
+    public ResourceLocation getTextureLocation(T npc) {
+        return getNpcTexture(npc);
+    }
+    private static void loadSkin(File file, ResourceLocation resource, String par1Str, boolean fix64) {
+        TextureManager texturemanager = Minecraft.getInstance().getTextureManager();
         Texture object = texturemanager.getTexture(resource);
         if (object == null) {
             object = new ImageDownloadAlt(file, par1Str, DefaultPlayerSkin.getDefaultSkin(), fix64, () -> {});
