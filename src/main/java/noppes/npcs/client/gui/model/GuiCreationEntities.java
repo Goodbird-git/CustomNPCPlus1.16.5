@@ -1,5 +1,9 @@
 package noppes.npcs.client.gui.model;
 
+import net.minecraft.util.ResourceLocation;
+import noppes.npcs.client.NoppesUtil;
+import noppes.npcs.client.gui.model.custom.GuiModelAnimation;
+import noppes.npcs.client.gui.model.custom.GuiStringSelection;
 import noppes.npcs.entity.*;
 import net.minecraft.world.*;
 import net.minecraftforge.registries.*;
@@ -13,6 +17,7 @@ import noppes.npcs.*;
 import noppes.npcs.shared.client.gui.components.*;
 import net.minecraft.client.renderer.entity.*;
 import net.minecraft.client.gui.widget.button.*;
+import software.bernie.geckolib3.resource.GeckoLibCache;
 
 public class GuiCreationEntities extends GuiCreationScreenInterface implements ICustomScrollListener
 {
@@ -87,6 +92,23 @@ public class GuiCreationEntities extends GuiCreationScreenInterface implements I
         this.addScroll(this.scroll);
         this.addLabel(new GuiLabel(110, "gui.simpleRenderer", this.guiLeft + 124, this.guiTop + 5, 16711680));
         this.addButton(new GuiButtonYesNo(this, 110, this.guiLeft + 260, this.guiTop, this.playerdata.simpleRender, b -> this.playerdata.simpleRender = ((GuiButtonYesNo)b).getBoolean()));
+        if(npc instanceof EntityCustomNpc && ((EntityCustomNpc)npc).modelData.getEntity(npc) instanceof EntityCustomModel) {
+            EntityCustomModel customModel = (EntityCustomModel) ((EntityCustomNpc)npc).modelData.getEntity(npc);
+            Vector<String> list = new Vector<String>();
+            for(ResourceLocation resLoc : GeckoLibCache.getInstance().getGeoModels().keySet()){
+                list.add(resLoc.toString());
+            }
+            this.addButton(new GuiButtonNop(this, 202, this.guiLeft + 122, this.guiTop + 18, 120, 20, customModel.modelResLoc.getPath(), (b) -> {
+                setSubGui(new GuiStringSelection(this, "Selecting geckolib model:", list, name -> {
+                    npc.display.customModelData.setModel(name);
+                    getButton(202).setDisplayText(name);
+                }));
+            }));
+            addLabel(new GuiLabel(12,"Model Animation:", this.guiLeft + 124, this.guiTop + 46));
+            this.addButton(new GuiButtonNop(this,12,this.guiLeft + 210, this.guiTop + 40, 100, 20, "selectServer.edit",(b)->{
+                setSubGui(new GuiModelAnimation());
+            }));
+        }
     }
 
     @Override
