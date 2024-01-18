@@ -20,6 +20,7 @@ import java.security.*;
 import java.io.*;
 import java.util.*;
 import net.minecraft.client.renderer.texture.*;
+import org.lwjgl.opengl.GL11;
 
 public class RenderNPCInterface<T extends EntityNPCInterface, M extends EntityModel<T>> extends LivingRenderer<T, M>
 {
@@ -120,6 +121,46 @@ public class RenderNPCInterface<T extends EntityNPCInterface, M extends EntityMo
         matrixScale.scale(npc.scaleX / 5.0f * size, npc.scaleY / 5.0f * size, npc.scaleZ / 5.0f * size);
     }
 
+    private void renderGeoModel(EntityCustomNpc npc, MatrixStack matrixStack, IRenderTypeBuffer buffer, int packedLight)
+    {
+        Entity entity = npc.modelData.getEntity(npc);
+        entity.yRot = entity.yRotO = 0;
+        if (!npc.isInvisible())
+        {
+            EntityRendererManager lvt_16_1_ = Minecraft.getInstance().getEntityRenderDispatcher();
+            lvt_16_1_.setRenderShadow(false);
+            RenderSystem.runAsFancy(() -> {
+                lvt_16_1_.render(entity, 0.0, 0.0, 0.0, 0.0F, 1.0F, matrixStack, buffer,packedLight);
+            });
+        }
+        else if (!npc.isInvisibleTo(Minecraft.getInstance().player))
+        {
+            GL11.glPushMatrix();
+            GL11.glColor4f(1.0F, 1.0F, 1.0F, 0.15F);
+            GL11.glDepthMask(false);
+            GL11.glEnable(GL11.GL_BLEND);
+            GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+            GL11.glAlphaFunc(GL11.GL_GREATER, 0.003921569F);
+            EntityRendererManager lvt_16_1_ = Minecraft.getInstance().getEntityRenderDispatcher();
+            lvt_16_1_.setRenderShadow(false);
+            RenderSystem.runAsFancy(() -> {
+                lvt_16_1_.render(entity, 0.0, 0.0, 0.0, 0.0F, 1.0F, matrixStack, buffer,packedLight);
+            });
+            GL11.glDisable(GL11.GL_BLEND);
+            GL11.glAlphaFunc(GL11.GL_GREATER, 0.1F);
+            GL11.glPopMatrix();
+            GL11.glDepthMask(true);
+        }
+    }
+
+    public void drawNameStandalone(T p_225623_1_, float p_225623_2_, float p_225623_3_, MatrixStack p_225623_4_, IRenderTypeBuffer p_225623_5_, int p_225623_6_){
+        net.minecraftforge.client.event.RenderNameplateEvent renderNameplateEvent = new net.minecraftforge.client.event.RenderNameplateEvent(p_225623_1_, p_225623_1_.getDisplayName(), this, p_225623_4_, p_225623_5_, p_225623_6_, p_225623_3_);
+        net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(renderNameplateEvent);
+        if (renderNameplateEvent.getResult() != net.minecraftforge.eventbus.api.Event.Result.DENY && (renderNameplateEvent.getResult() == net.minecraftforge.eventbus.api.Event.Result.ALLOW || this.shouldShowName(p_225623_1_))) {
+            this.renderNameTag(p_225623_1_, renderNameplateEvent.getContent(), p_225623_4_, p_225623_5_, p_225623_6_);
+        }
+    }
+
     public void render(final T npc, final float entityYaw, final float partialTicks, final MatrixStack matrixStack, final IRenderTypeBuffer buffer, final int packedLight) {
         if (npc.isKilled()) {
             this.shadowRadius = 0.0f;
@@ -152,7 +193,13 @@ public class RenderNPCInterface<T extends EntityNPCInterface, M extends EntityMo
         this.shadowRadius = npc.getBbWidth() * 0.8f;
         final int stackSize = ((MatrixStackMixin)matrixStack).getStack().size();
         try {
-            super.render((T) (RenderNPCInterface.currentNpc = npc), entityYaw, partialTicks, matrixStack, buffer, packedLight);
+            currentNpc = npc;
+            if(npc instanceof EntityCustomNpc && ((EntityCustomNpc)npc).modelData.getEntity(npc) instanceof EntityCustomModel){
+                renderGeoModel((EntityCustomNpc) npc,matrixStack,buffer,packedLight);
+                drawNameStandalone(npc, entityYaw, partialTicks, matrixStack, buffer, packedLight);
+            }else{
+                super.render(npc, entityYaw, partialTicks, matrixStack, buffer, packedLight);
+            }
         }
         catch (Throwable e) {
             while (((MatrixStackMixin)matrixStack).getStack().size() > stackSize) {
