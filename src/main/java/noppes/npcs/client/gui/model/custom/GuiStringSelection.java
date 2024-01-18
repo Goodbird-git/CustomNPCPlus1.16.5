@@ -19,6 +19,7 @@ public class GuiStringSelection extends GuiNPCInterface {
     public List<String> options;
 
     public GuiStringSelection(Screen parent, String title, List<String> options, Consumer<String> action) {
+        drawDefaultBackground = false;
         this.parent = parent;
         this.action = action;
         this.title = title;

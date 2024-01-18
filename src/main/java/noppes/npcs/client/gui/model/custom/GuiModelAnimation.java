@@ -1,5 +1,6 @@
 package noppes.npcs.client.gui.model.custom;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.util.ResourceLocation;
 import noppes.npcs.client.gui.util.GuiNPCInterface;
 import noppes.npcs.shared.client.gui.components.GuiButtonNop;
@@ -24,12 +25,10 @@ public class GuiModelAnimation extends GuiNPCInterface implements ITextfieldList
     }
 
     public void addSelectionBlock(int id, int y, String label, String value){
-        this.addLabel(new GuiLabel(id,label, guiLeft - 85, y + 5));
-        addTextField(new GuiTextFieldNop(id,this, guiLeft - 10, y, 200, 20, value));
-        this.addButton(new GuiButtonNop(this,id, guiLeft + 193, y, 80, 20, "mco.template.button.select"));
+        this.addLabel(new GuiLabel(id,label, guiLeft - 85, y + 5,0xffffff));
+        addTextField(new GuiTextFieldNop(id,this, guiLeft - 40, y, 200, 20, value));
+        this.addButton(new GuiButtonNop(this,id, guiLeft + 163, y, 80, 20, "mco.template.button.select"));
     }
-
-
 
     @Override
     public void buttonEvent(GuiButtonNop button) {

@@ -104,7 +104,7 @@ public class GuiCreationEntities extends GuiCreationScreenInterface implements I
                     getButton(202).setDisplayText(name);
                 }));
             }));
-            addLabel(new GuiLabel(12,"Model Animation:", this.guiLeft + 124, this.guiTop + 46));
+            addLabel(new GuiLabel(12,"Model Animation:", this.guiLeft + 124, this.guiTop + 46,0xffffff));
             this.addButton(new GuiButtonNop(this,12,this.guiLeft + 210, this.guiTop + 40, 100, 20, "selectServer.edit",(b)->{
                 setSubGui(new GuiModelAnimation());
             }));
@@ -135,5 +135,12 @@ public class GuiCreationEntities extends GuiCreationScreenInterface implements I
 
     @Override
     public void scrollDoubleClicked(final String selection, final GuiCustomScroll scroll) {
+    }
+
+    @Override
+    public void drawNpc(LivingEntity entity, int x, int y, float zoomed, int rotation) {
+        if(wrapper.subgui==null) {
+            super.drawNpc(entity, x, y, zoomed, rotation);
+        }
     }
 }
