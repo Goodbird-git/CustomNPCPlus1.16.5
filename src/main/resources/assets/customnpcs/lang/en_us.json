@@ -12,6 +12,7 @@
   "entity.customnpcs.customnpcclassic": "CNpc Classic",
   "entity.customnpcs.customnpcchairmount": "CNpc Block Mount",
   "entity.customnpcs.customnpcprojectile": "Projectile",
+  "entity.customnpcs.custommodelentity": "Geckolib Model",
   "itemGroup.cnpcs": "CustomNpcs Tools",
   "block.customnpcs.npccarpentybench": "Carpentry Bench",
   "block.customnpcs.npcredstoneblock": "Redstone Block",
