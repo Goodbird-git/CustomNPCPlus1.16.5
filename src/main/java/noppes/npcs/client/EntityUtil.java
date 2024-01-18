@@ -124,6 +124,7 @@ public class EntityUtil
             ((EntityCustomModel) entity).modelResLoc=new ResourceLocation(((EntityNPCInterface) copied).display.customModelData.getModel());
             ((EntityCustomModel) entity).animResLoc=new ResourceLocation(((EntityNPCInterface) copied).display.customModelData.getAnimFile());
             ((EntityCustomModel) entity).idleAnim=((EntityNPCInterface) copied).display.customModelData.getIdleAnim();
+            ((EntityCustomModel) entity).walkAnim=((EntityNPCInterface) copied).display.customModelData.getWalkAnim();
             if(((EntityNPCInterface) copied).inventory.getLeftHand()!=null){
                 ((EntityCustomModel) entity).leftHeldItem=((EntityNPCInterface) copied).inventory.getLeftHand().getMCItemStack();
             }
