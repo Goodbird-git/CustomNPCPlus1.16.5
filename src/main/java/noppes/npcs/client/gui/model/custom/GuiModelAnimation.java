@@ -12,8 +12,8 @@ import software.bernie.geckolib3.resource.GeckoLibCache;
 public class GuiModelAnimation extends GuiNPCInterface implements ITextfieldListener {
 
     @Override
-    public void initGui() {
-        super.initGui();
+    public void init() {
+        super.init();
         int y = guiTop + 44;
         addSelectionBlock(1,y,"Animation File:",npc.display.customModelData.getAnimFile());
         addSelectionBlock(2,y+=23,"Idle:",npc.display.customModelData.getIdleAnim());

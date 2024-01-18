@@ -26,8 +26,8 @@ public class GuiStringSelection extends GuiNPCInterface {
     }
 
     @Override
-    public void initGui() {
-        super.initGui();
+    public void init() {
+        super.init();
         addLabel(new GuiLabel(0, title, width / 2 - (this.font.width(title) / 2), 20, 0xffffff));
         options.sort(String.CASE_INSENSITIVE_ORDER);
         slot = new GuiStringSlotNop(options, this, false);
