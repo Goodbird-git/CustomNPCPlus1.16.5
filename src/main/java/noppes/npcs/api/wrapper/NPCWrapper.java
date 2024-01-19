@@ -1,8 +1,11 @@
 package noppes.npcs.api.wrapper;
 
+import net.minecraft.server.MinecraftServer;
 import noppes.npcs.entity.*;
 import noppes.npcs.api.entity.data.*;
 import net.minecraft.util.math.*;
+import noppes.npcs.packets.Packets;
+import noppes.npcs.packets.client.PacketSyncAnimation;
 import noppes.npcs.util.*;
 import noppes.npcs.api.item.*;
 import noppes.npcs.api.*;
@@ -13,6 +16,7 @@ import net.minecraft.entity.*;
 import noppes.npcs.*;
 import noppes.npcs.controllers.*;
 import noppes.npcs.api.entity.*;
+import software.bernie.geckolib3.core.builder.AnimationBuilder;
 
 public class NPCWrapper<T extends EntityNPCInterface> extends EntityLivingWrapper<T> implements ICustomNpc
 {
@@ -252,5 +256,12 @@ public class NPCWrapper<T extends EntityNPCInterface> extends EntityLivingWrappe
     @Override
     public void trigger(final int id, final Object... arguments) {
         EventHooks.onScriptTriggerEvent(this.entity.script, id, this.getWorld(), this.getPos(), null, arguments);
+    }
+
+    public void syncAnimationsFor(IPlayer player, AnimationBuilder builder) {
+        Packets.send(player.getMCEntity(), new PacketSyncAnimation(entity.getId(),builder));
+    }
+    public void syncAnimationsForAll(AnimationBuilder builder) {
+        Packets.sendAll(new PacketSyncAnimation(entity.getId(),builder));
     }
 }

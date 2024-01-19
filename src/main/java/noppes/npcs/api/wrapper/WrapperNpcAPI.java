@@ -33,6 +33,7 @@ import noppes.npcs.api.wrapper.gui.*;
 import nikedemos.markovnames.generators.*;
 import noppes.npcs.shared.common.util.*;
 import net.minecraftforge.eventbus.api.*;
+import software.bernie.geckolib3.core.builder.AnimationBuilder;
 
 public class WrapperNpcAPI extends NpcAPI
 {
@@ -279,6 +280,10 @@ public class WrapperNpcAPI extends NpcAPI
     @Override
     public String getRandomName(final int dictionary, final int gender) {
         return MarkovGenerator.fetch(dictionary, gender);
+    }
+
+    public AnimationBuilder createAnimBuilder(){
+        return new AnimationBuilder();
     }
 
     static {
