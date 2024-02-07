@@ -103,6 +103,8 @@ public class CustomNpcs
     public static boolean EnableInvisibleNpcs;
     @ConfigProp
     public static boolean NpcSpeachTriggersChatEvent;
+    @ConfigProp(info = "A comma separated list of event packages that will be included into forge events")
+    public static String EnabledForgeEventPackages;
     public static ConfigLoader Config;
     public static boolean VerboseDebug;
     public static MinecraftServer Server;
@@ -334,5 +336,6 @@ public class CustomNpcs
         CustomNpcs.EnableInvisibleNpcs = true;
         CustomNpcs.NpcSpeachTriggersChatEvent = false;
         CustomNpcs.VerboseDebug = false;
+        CustomNpcs.EnabledForgeEventPackages = "net.minecraftforge.event";
     }
 }
