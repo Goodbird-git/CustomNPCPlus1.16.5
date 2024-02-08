@@ -199,10 +199,15 @@ public class BlockWrapper implements IBlock
         final BlockState state = this.getMCBlockState();
         for (final Property<?> p : state.getProperties()) {
             if (p.getName().equalsIgnoreCase(name)) {
+                setPropertyValue(state, p, (Comparable)val);
                 return;
             }
         }
         throw new CustomNPCsException("Unknown property: " + name);
+    }
+
+    private <T extends Comparable<T>> void setPropertyValue(BlockState state, Property<T> p, Comparable<?> c) {
+        this.level.getMCWorld().setBlock(pos,state.setValue(p, p.getValueClass().cast(c)),3);
     }
 
     @Override
