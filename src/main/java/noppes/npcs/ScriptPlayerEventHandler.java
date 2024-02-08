@@ -358,7 +358,7 @@ public class ScriptPlayerEventHandler
             for (final Class c : classes) {
                 final String name = c.getName();
                 if (!name.startsWith("net.minecraftforge.event.terraingen")) {
-                    if (!c.getName().startsWith("net.minecraftforge.event")) {
+                    if (!shouldAddToForgeEvents(c.getName())) {
                         continue;
                     }
                     try {
@@ -398,5 +398,19 @@ public class ScriptPlayerEventHandler
             LogWriter.except(e2);
         }
         return this;
+    }
+
+    private String[] enabledForgeEventPackages = null;
+
+    public boolean shouldAddToForgeEvents(String event){
+        if(enabledForgeEventPackages==null){
+            enabledForgeEventPackages = CustomNpcs.EnabledForgeEventPackages.split(",");
+        }
+        for (String enabledForgeEventPackage : enabledForgeEventPackages) {
+            if (event.startsWith(enabledForgeEventPackage)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
