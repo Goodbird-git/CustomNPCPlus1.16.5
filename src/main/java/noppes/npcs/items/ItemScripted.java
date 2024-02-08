@@ -65,16 +65,21 @@ public class ItemScripted extends Item
 
     public CompoundNBT getShareTag(final ItemStack stack) {
         final IItemStack istack = NpcAPI.Instance().getIItemStack(stack);
+        CompoundNBT generalTag = super.getShareTag(stack);
         if (istack instanceof ItemScriptedWrapper) {
-            return ((ItemScriptedWrapper)istack).getMCNbt();
+            if(generalTag!=null) {
+                return generalTag.merge(((ItemScriptedWrapper) istack).getMCNbt());
+            }
+            return ((ItemScriptedWrapper) istack).getMCNbt();
         }
-        return null;
+        return generalTag;
     }
 
     public void readShareTag(final ItemStack stack, @Nullable final CompoundNBT nbt) {
         if (nbt == null) {
             return;
         }
+        super.readShareTag(stack,nbt);
         final IItemStack istack = NpcAPI.Instance().getIItemStack(stack);
         if (istack instanceof ItemScriptedWrapper) {
             ((ItemScriptedWrapper)istack).setMCNbt(nbt);
