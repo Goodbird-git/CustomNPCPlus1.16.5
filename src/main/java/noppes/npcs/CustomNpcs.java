@@ -209,12 +209,14 @@ public class CustomNpcs
         new BankController();
         DialogController.instance.load();
         QuestController.instance.load();
+        PlayerSkinController.getInstance();
         ScriptController.HasStart = true;
         ServerCloneController.Instance = new ServerCloneController();
     }
 
     @SubscribeEvent
     public void stopped(final FMLServerStoppedEvent event) {
+        PlayerSkinController.getInstance().save();
         ServerCloneController.Instance = null;
         CustomNpcs.Server = null;
     }

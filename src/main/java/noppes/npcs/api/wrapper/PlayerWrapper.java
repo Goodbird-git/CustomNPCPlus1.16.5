@@ -620,4 +620,16 @@ public class PlayerWrapper<T extends ServerPlayerEntity> extends EntityLivingBas
     public void trigger(final int id, final Object... arguments) {
         EventHooks.onScriptTriggerEvent(PlayerData.get(this.entity).scriptData, id, this.getWorld(), this.getPos(), null, arguments);
     }
+
+    public String getSkinType(int type) {
+        return PlayerSkinController.getInstance().get(entity, type);
+    }
+
+    public void setSkinType(String location, int type) {
+        PlayerSkinController.getInstance().set(entity, location, type);
+    }
+
+    public void setSkin(boolean isSmallArms, int body, int bodyColor, int hair, int hairColor, int face, int eyesColor, int leg, int jacket, int shoes, int ... peculiarities) {
+        PlayerSkinController.getInstance().set(entity, isSmallArms, body, bodyColor, hair, hairColor, face, eyesColor, leg, jacket, shoes, peculiarities);
+    }
 }
