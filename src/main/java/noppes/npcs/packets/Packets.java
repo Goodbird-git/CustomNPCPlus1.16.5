@@ -60,6 +60,9 @@ public class Packets
         Packets.Channel.registerMessage(Packets.index++, PacketNpcVisibleTrue.class, PacketNpcVisibleTrue::encode, PacketNpcVisibleTrue::decode, PacketBasic::handle);
         Packets.Channel.registerMessage(Packets.index++, PacketPlayerSkinGet.class, PacketPlayerSkinGet::encode, PacketPlayerSkinGet::decode, PacketBasic::handle);
         Packets.Channel.registerMessage(Packets.index++, PacketPlayerSkinAdd.class, PacketPlayerSkinAdd::encode, PacketPlayerSkinAdd::decode, PacketBasic::handle);
+        Packets.Channel.registerMessage(Packets.index++, PacketOverlayShow.class, PacketOverlayShow::encode, PacketOverlayShow::decode, PacketBasic::handle);
+        Packets.Channel.registerMessage(Packets.index++, PacketOverlayHide.class, PacketOverlayHide::encode, PacketOverlayHide::decode, PacketBasic::handle);
+        Packets.Channel.registerMessage(Packets.index++, PacketHideAllOverlays.class, PacketHideAllOverlays::encode, PacketHideAllOverlays::decode, PacketBasic::handle);
         Packets.Channel.registerMessage(Packets.index++, SPacketBankGet.class, SPacketBankGet::encode, SPacketBankGet::decode, PacketServerBasic::handle);
         Packets.Channel.registerMessage(Packets.index++, SPacketBankRemove.class, SPacketBankRemove::encode, SPacketBankRemove::decode, PacketServerBasic::handle);
         Packets.Channel.registerMessage(Packets.index++, SPacketBankSave.class, SPacketBankSave::encode, SPacketBankSave::decode, PacketServerBasic::handle);
