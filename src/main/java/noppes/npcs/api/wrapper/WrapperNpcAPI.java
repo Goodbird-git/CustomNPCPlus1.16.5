@@ -29,6 +29,7 @@ import noppes.npcs.api.entity.data.IPlayerMail;
 import noppes.npcs.api.gui.ICustomGui;
 import noppes.npcs.api.handler.*;
 import noppes.npcs.api.item.IItemStack;
+import noppes.npcs.api.overlay.IOverlay;
 import noppes.npcs.api.wrapper.gui.CustomGuiWrapper;
 import noppes.npcs.containers.ContainerNpcInterface;
 import noppes.npcs.controllers.*;
@@ -289,6 +290,11 @@ public class WrapperNpcAPI extends NpcAPI
     @Override
     public String getRandomName(final int dictionary, final int gender) {
         return MarkovGenerator.fetch(dictionary, gender);
+    }
+
+    @Override
+    public IOverlay createOverlay(final int id) {
+        return new OverlayWrapper(id);
     }
 
     static {

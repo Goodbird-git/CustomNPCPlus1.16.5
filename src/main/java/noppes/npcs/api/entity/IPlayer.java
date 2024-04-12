@@ -8,6 +8,7 @@ import noppes.npcs.api.entity.data.*;
 import noppes.npcs.api.handler.data.*;
 import noppes.npcs.api.gui.*;
 import net.minecraft.entity.*;
+import noppes.npcs.api.overlay.IOverlay;
 
 public interface IPlayer<T extends ServerPlayerEntity> extends IEntityLiving<T>
 {
@@ -120,4 +121,10 @@ public interface IPlayer<T extends ServerPlayerEntity> extends IEntityLiving<T>
     ICustomGui getCustomGui();
 
     void trigger(final int p0, final Object... p1);
+
+    void showOverlay(final IOverlay p0);
+
+    void hideOverlay(final int p0);
+
+    void hideAllOverlays();
 }
