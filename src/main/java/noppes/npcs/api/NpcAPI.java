@@ -18,6 +18,7 @@ import noppes.npcs.api.gui.*;
 import net.minecraftforge.eventbus.api.*;
 import java.io.*;
 import net.minecraftforge.fml.*;
+import noppes.npcs.api.overlay.IOverlay;
 
 public abstract class NpcAPI
 {
@@ -103,6 +104,8 @@ public abstract class NpcAPI
     public abstract String executeCommand(final IWorld p0, final String p1);
 
     public abstract String getRandomName(final int p0, final int p1);
+
+    public abstract IOverlay createOverlay(final int p0);
 
     static {
         NpcAPI.instance = null;

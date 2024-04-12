@@ -31,6 +31,7 @@ import noppes.npcs.api.entity.data.IPlayerMail;
 import noppes.npcs.api.gui.ICustomGui;
 import noppes.npcs.api.handler.data.IQuest;
 import noppes.npcs.api.item.IItemStack;
+import noppes.npcs.api.overlay.IOverlay;
 import noppes.npcs.api.wrapper.gui.CustomGuiWrapper;
 import noppes.npcs.client.EntityUtil;
 import noppes.npcs.constants.EnumGuiType;
@@ -631,5 +632,20 @@ public class PlayerWrapper<T extends ServerPlayerEntity> extends EntityLivingBas
 
     public void setSkin(boolean isSmallArms, int body, int bodyColor, int hair, int hairColor, int face, int eyesColor, int leg, int jacket, int shoes, int ... peculiarities) {
         PlayerSkinController.getInstance().set(entity, isSmallArms, body, bodyColor, hair, hairColor, face, eyesColor, leg, jacket, shoes, peculiarities);
+    }
+
+    @Override
+    public void showOverlay(final IOverlay overlay) {
+        Packets.send(this.entity, new PacketOverlayShow(overlay.toNbt()));
+    }
+
+    @Override
+    public void hideOverlay(final int id) {
+        Packets.send(this.entity, new PacketOverlayHide(id));
+    }
+
+    @Override
+    public void hideAllOverlays() {
+        Packets.send(this.entity, new PacketHideAllOverlays(true));
     }
 }
