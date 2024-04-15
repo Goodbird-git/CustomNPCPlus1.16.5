@@ -42,6 +42,7 @@ import noppes.npcs.items.ItemScripted;
 import noppes.npcs.packets.Packets;
 import noppes.npcs.packets.client.PacketItemUpdate;
 import noppes.npcs.shared.common.util.LogWriter;
+import org.reflections.Reflections;
 
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
@@ -325,77 +326,39 @@ public class ScriptPlayerEventHandler
             final Method m = handler.getClass().getMethod("forgeEntity", Event.class);
             final Method register = MinecraftForge.EVENT_BUS.getClass().getDeclaredMethod("register", Class.class, Object.class, Method.class);
             register.setAccessible(true);
-            final HashSet<Class> classes = new HashSet<>();
-            final Method getDeclaredFields0 = Class.class.getDeclaredMethod("getDeclaredFields0", Boolean.TYPE);
-            getDeclaredFields0.setAccessible(true);
-            final Field[] fields = (Field[]) getDeclaredFields0.invoke(ClassLoader.class, false);
-            Field f = null;
-            for (final Object each : fields) {
-                if ("classes".equals(((Field)each).getName())) {
-                    f = (Field) each;
+            final HashSet<Class<?>> classes = new HashSet<Class<?>>();
+            final Reflections reflections = new Reflections("net.minecraftforge.event", new Scanner[0]);
+            for (final Class<?> c : reflections.getSubTypesOf(Event.class)) {
+                if (!Event.class.isAssignableFrom(c)) {
+                    continue;
                 }
-            }
-            if (f == null) {
-                throw new AssertionError();
-            }
-            f.setAccessible(true);
-            for (ClassLoader loader = PlayerContainerEvent.Open.class.getClassLoader(); loader != null; loader = loader.getParent()) {
-                for (final Class c : new ArrayList<Class>((Collection<? extends Class>)f.get(loader))) {
-                    if (!Event.class.isAssignableFrom(c)) {
-                        continue;
-                    }
-                    try {
-                        if (c.getDeclaredClasses().length > 0) {
-                            classes.addAll(Arrays.asList(c.getDeclaredClasses()));
-                        }
-                        else {
-                            classes.add(c);
-                        }
-                    }
-                    catch (Throwable t2) {}
-                }
-            }
-            for (final Class c : classes) {
-                final String name = c.getName();
-                if (!name.startsWith("net.minecraftforge.event.terraingen")) {
-                    if (!shouldAddToForgeEvents(c.getName())) {
-                        continue;
-                    }
-                    try {
-                        if (GenericEvent.class.isAssignableFrom(c) || EntityEvent.EntityConstructing.class.isAssignableFrom(c) || WorldEvent.PotentialSpawns.class.isAssignableFrom(c) || TickEvent.RenderTickEvent.class.isAssignableFrom(c) || TickEvent.ClientTickEvent.class.isAssignableFrom(c) || NetworkEvent.ClientCustomPayloadEvent.class.isAssignableFrom(c) || ItemTooltipEvent.class.isAssignableFrom(c)) {
-                            continue;
-                        }
-                        if (!Event.class.isAssignableFrom(c) || Modifier.isAbstract(c.getModifiers()) || !Modifier.isPublic(c.getModifiers())) {
-                            continue;
-                        }
-                        final String eventName = ForgeEventHandler.getEventName(c);
-                        if (ForgeEventHandler.eventNames.contains(eventName)) {
-                            continue;
-                        }
-                        register.invoke(MinecraftForge.EVENT_BUS, c, handler, m);
-                        ForgeEventHandler.eventNames.add(eventName);
-                    }
-                    catch (Throwable t) {
-                        LogWriter.except(t);
-                    }
-                }
-            }
-            if (PixelmonHelper.Enabled) {
                 try {
-                    for (final Class c : classes) {
-                        if (c.getName().startsWith("com.pixelmonmod.pixelmon.api.events") && Event.class.isAssignableFrom(c) && !Modifier.isAbstract(c.getModifiers()) && Modifier.isPublic(c.getModifiers())) {
-                            ForgeEventHandler.eventNames.add(ForgeEventHandler.getEventName(c));
-                            register.invoke(PixelmonHelper.EVENT_BUS, c, handler, m);
-                        }
+                    if (c.getDeclaredClasses().length > 0) {
+                        classes.addAll(Arrays.asList(c.getDeclaredClasses()));
+                    }
+                    else {
+                        classes.add(c);
                     }
                 }
-                catch (Throwable e) {
-                    LogWriter.except(e);
+                catch (Throwable t) {}
+            }
+            for (final Class<?> c : classes) {
+                try {
+                    if (GenericEvent.class.isAssignableFrom(c) || EntityEvent.EntityConstructing.class.isAssignableFrom(c) || WorldEvent.CreateSpawnPosition.class.isAssignableFrom(c) || TickEvent.RenderTickEvent.class.isAssignableFrom(c) || TickEvent.ClientTickEvent.class.isAssignableFrom(c) || NetworkEvent.ClientCustomPayloadEvent.class.isAssignableFrom(c) || ItemTooltipEvent.class.isAssignableFrom(c)) {
+                        continue;
+                    }
+                    final String eventName = ForgeEventHandler.getEventName(c);
+                    if (ForgeEventHandler.eventNames.contains(eventName)) {
+                        continue;
+                    }
+                    register.invoke(MinecraftForge.EVENT_BUS, c, handler, m);
+                    ForgeEventHandler.eventNames.add(eventName);
                 }
+                catch (Throwable t2) {}
             }
         }
-        catch (Throwable e2) {
-            LogWriter.except(e2);
+        catch (Throwable e) {
+            LogWriter.except(e);
         }
         return this;
     }
