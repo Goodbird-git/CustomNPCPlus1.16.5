@@ -11,7 +11,7 @@ import net.minecraftforge.fml.common.Mod;
 import noppes.npcs.CustomNpcs;
 
 @OnlyIn(Dist.CLIENT)
-@Mod.EventBusSubscriber(modid = CustomNpcs.MODID)
+@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = CustomNpcs.MODID)
 public class OverlayEventHandler {
 
     @SubscribeEvent
