@@ -184,6 +184,12 @@ public class CustomGuiWrapper implements ICustomGui
         return component;
     }
 
+    public IEntityDisplay addEntityDisplay(int id, int x, int y, int width, int height, IEntity entity){
+        IEntityDisplay display = new CustomGuiEntityDisplayWrapper(id, x, y, width, height, entity);
+        this.components.add(display);
+        return display;
+    }
+
     @Override
     public void showPlayerInventory(final int x, final int y) {
         this.showPlayerInv = true;
