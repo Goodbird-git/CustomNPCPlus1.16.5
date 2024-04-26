@@ -756,10 +756,19 @@ public class ClientProxy extends CommonProxy {
                     }
                     break;
                 }
-                default: { break; }
+                default: {
+                    ResourceLocation loc = new ResourceLocation(CustomNpcs.MODID, "textures/entity/custom/"+gender+"/peculiarities/"+path[i]+".png");
+                    re.bind(loc);
+                    if (re.getTexture(loc) != null) {
+                        try {
+                            listBuffers.add(readBufferedImage(rm.getResource(loc).getInputStream()));
+                        }
+                        catch (Exception e) {  }
+                    }
+                    break;
+                }
             }
         }
-        ByteBuffer buff;
         // combine
         BufferedImage skinImage = null;
         try {
