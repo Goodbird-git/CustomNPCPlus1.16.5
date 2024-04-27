@@ -112,8 +112,8 @@ public class CustomGuiEntityDisplay extends Widget implements IGuiComponent {
             scale = 2.0F / entity.getBbHeight();
         }
 
-        float f7 = guiLeft + (float)x - (float)xMouse;
-        float f8 = (guiTop + (float)y - 50.0F * scale * zoomed) * (entity.getBbHeight() / entity.getEyeHeight()) - (float)yMouse;
+        float f7 = parent.getGuiLeft() + (float)x - (float)xMouse;
+        float f8 = (parent.getGuiTop() + (float)y - 50.0F * scale * zoomed) * (entity.getBbHeight() / entity.getEyeHeight()) - (float)yMouse;
         if(component.isFollowingCursor) {
             entity.yRot = ((float) Math.atan((double) (f7 / 80.0F)) * 40.0F + (float) rotation);
             entity.xRot = (-((float) Math.atan((double) (f8 / 40.0F))) * 20.0F);
@@ -133,7 +133,7 @@ public class CustomGuiEntityDisplay extends Widget implements IGuiComponent {
 
         float fs = 30.0F * scale * zoomed;
         RenderSystem.pushMatrix();
-        RenderSystem.translatef(guiLeft + (float)x, (float)(guiTop + y), 1050.0f);
+        RenderSystem.translatef(parent.getGuiLeft() + (float)x, (float)(parent.getGuiTop() + y), 1050.0f);
         RenderSystem.scalef(1.0f, 1.0f, -1.0f);
         final MatrixStack matrixStack = new MatrixStack();
         matrixStack.translate(0.0, 0.0, 1000.0);
