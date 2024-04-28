@@ -215,7 +215,49 @@ public class ItemStackWrapper implements IItemStack, ICapabilitySerializable<Com
         if (ench == null) {
             throw new CustomNPCsException("Unknown enchant id:" + id);
         }
-        this.item.enchant(ench, strenght);
+        enchant(item, ench, strenght);
+    }
+
+    public int getEnchantmentLevel(final String id) {
+        final Enchantment ench = ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation(id));
+        if (ench == null) {
+            throw new CustomNPCsException("Unknown enchant id:" + id);
+        }
+        if (!this.isEnchanted()) {
+            return 0;
+        }
+
+        if (!item.getOrCreateTag().contains("Enchantments", 9)) {
+            item.getOrCreateTag().put("Enchantments", new ListNBT());
+        }
+
+        ListNBT listnbt = item.getOrCreateTag().getList("Enchantments", 10);
+        for (int i = 0; i < listnbt.size(); ++i) {
+            final CompoundNBT compound = listnbt.getCompound(i);
+            if(compound.getString("id").equals(String.valueOf(Registry.ENCHANTMENT.getKey(ench)))){
+                return compound.getInt("lvl");
+            }
+        }
+        return 0;
+    }
+
+    public void enchant(ItemStack stack, Enchantment p_77966_1_, int p_77966_2_) {
+        if (!stack.getOrCreateTag().contains("Enchantments", 9)) {
+            stack.getOrCreateTag().put("Enchantments", new ListNBT());
+        }
+
+        ListNBT listnbt = stack.getOrCreateTag().getList("Enchantments", 10);
+        for (int i = 0; i < listnbt.size(); ++i) {
+            final CompoundNBT compound = listnbt.getCompound(i);
+            if(compound.getString("id").equals(String.valueOf(Registry.ENCHANTMENT.getKey(p_77966_1_)))){
+                compound.putShort("lvl", (byte)p_77966_2_);
+                return;
+            }
+        }
+        CompoundNBT compoundnbt = new CompoundNBT();
+        compoundnbt.putString("id", String.valueOf(Registry.ENCHANTMENT.getKey(p_77966_1_)));
+        compoundnbt.putShort("lvl", ((byte)p_77966_2_));
+        listnbt.add(compoundnbt);
     }
 
     @Override
@@ -235,7 +277,7 @@ public class ItemStackWrapper implements IItemStack, ICapabilitySerializable<Com
         final ListNBT list = this.item.getEnchantmentTags();
         for (int i = 0; i < list.size(); ++i) {
             final CompoundNBT compound = list.getCompound(i);
-            if (compound.getString("id").equalsIgnoreCase(id)) {
+            if (compound.getString("id").equalsIgnoreCase(String.valueOf(Registry.ENCHANTMENT.getKey(ench)))) {
                 return true;
             }
         }
@@ -255,14 +297,14 @@ public class ItemStackWrapper implements IItemStack, ICapabilitySerializable<Com
         final ListNBT newList = new ListNBT();
         for (int i = 0; i < list.size(); ++i) {
             final CompoundNBT compound = list.getCompound(i);
-            if (!compound.getString("id").equalsIgnoreCase(id)) {
+            if (!compound.getString("id").equalsIgnoreCase(String.valueOf(Registry.ENCHANTMENT.getKey(ench)))) {
                 newList.add(compound);
             }
         }
         if (list.size() == newList.size()) {
             return false;
         }
-        this.item.getTag().put("ench", newList);
+        this.item.getOrCreateTag().put("ench", newList);
         return true;
     }
 
