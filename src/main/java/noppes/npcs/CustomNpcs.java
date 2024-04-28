@@ -103,6 +103,8 @@ public class CustomNpcs
     public static boolean EnableInvisibleNpcs;
     @ConfigProp
     public static boolean NpcSpeachTriggersChatEvent;
+    @ConfigProp(info = "A comma separated list of event packages that will be included into forge events")
+    public static String EnabledForgeEventPackages;
     @ConfigProp(info = "Enable new dialog and quest GUI which allow accepting and rejecting quests")
     public static boolean EnableNewDialogSystem;
     public static ConfigLoader Config;
@@ -336,6 +338,7 @@ public class CustomNpcs
         CustomNpcs.EnableInvisibleNpcs = true;
         CustomNpcs.NpcSpeachTriggersChatEvent = false;
         CustomNpcs.VerboseDebug = false;
+        CustomNpcs.EnabledForgeEventPackages = "net.minecraftforge.event";
         CustomNpcs.EnableNewDialogSystem = false;
     }
 }
