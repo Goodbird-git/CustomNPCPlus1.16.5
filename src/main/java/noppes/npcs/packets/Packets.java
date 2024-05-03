@@ -66,6 +66,8 @@ public class Packets {
         Channel.registerMessage(index++, PacketSyncUpdate.class, PacketSyncUpdate::encode, PacketSyncUpdate::decode, PacketBasic::handle);
         Channel.registerMessage(index++, PacketNpcVisibleFalse.class, PacketNpcVisibleFalse::encode, PacketNpcVisibleFalse::decode, PacketBasic::handle);
         Channel.registerMessage(index++, PacketNpcVisibleTrue.class, PacketNpcVisibleTrue::encode, PacketNpcVisibleTrue::decode, PacketBasic::handle);
+        Channel.registerMessage(index++, PacketSyncSkin.class, PacketSyncSkin::encode, PacketSyncSkin::decode, PacketSyncSkin::handle);
+
         Channel.registerMessage(index++, SPacketBankGet.class, SPacketBankGet::encode, SPacketBankGet::decode, PacketServerBasic::handle);
         Channel.registerMessage(index++, SPacketBankRemove.class, SPacketBankRemove::encode, SPacketBankRemove::decode, PacketServerBasic::handle);
         Channel.registerMessage(index++, SPacketBankSave.class, SPacketBankSave::encode, SPacketBankSave::decode, PacketServerBasic::handle);
