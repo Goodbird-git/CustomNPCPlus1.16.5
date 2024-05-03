@@ -37,6 +37,7 @@ public class PlayerData implements ICapabilityProvider {
     public PlayerFactionData factionData;
     public PlayerItemGiverData itemgiverData;
     public PlayerMailData mailData;
+    public PlayerSkinData skinData;
     public PlayerScriptData scriptData;
     public CompoundNBT scriptStoreddata;
     public DataTimers timers;
@@ -66,6 +67,7 @@ public class PlayerData implements ICapabilityProvider {
         this.factionData = new PlayerFactionData();
         this.itemgiverData = new PlayerItemGiverData();
         this.mailData = new PlayerMailData();
+        this.skinData = new PlayerSkinData();
         this.scriptStoreddata = new CompoundNBT();
         this.timers = new DataTimers(this);
         this.playername = "";
@@ -87,6 +89,7 @@ public class PlayerData implements ICapabilityProvider {
         this.factionData.loadNBTData(data);
         this.itemgiverData.loadNBTData(data);
         this.mailData.loadNBTData(data);
+        this.skinData.loadNBTData(data);
         this.timers.load(data);
         if (this.player != null) {
             this.playername = this.player.getName().getString();
@@ -134,6 +137,7 @@ public class PlayerData implements ICapabilityProvider {
         this.factionData.saveNBTData(compound);
         this.itemgiverData.saveNBTData(compound);
         this.mailData.saveNBTData(compound);
+        this.skinData.saveNBTData(compound);
         this.timers.save(compound);
         compound.putString("PlayerName", this.playername);
         compound.putString("UUID", this.uuid);
