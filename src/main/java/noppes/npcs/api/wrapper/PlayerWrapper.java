@@ -636,4 +636,8 @@ public class PlayerWrapper<T extends ServerPlayerEntity> extends EntityLivingBas
     public void hideAllOverlays() {
         Packets.send(this.entity, new PacketHideAllOverlays(true));
     }
+
+    public PlayerSkinData getSkin(){
+        return PlayerData.get(entity).skinData;
+    }
 }
