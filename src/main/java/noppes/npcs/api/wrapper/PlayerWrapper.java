@@ -620,4 +620,8 @@ public class PlayerWrapper<T extends ServerPlayerEntity> extends EntityLivingBas
     public void trigger(final int id, final Object... arguments) {
         EventHooks.onScriptTriggerEvent(PlayerData.get(this.entity).scriptData, id, this.getWorld(), this.getPos(), null, arguments);
     }
+
+    public PlayerSkinData getSkin(){
+        return PlayerData.get(entity).skinData;
+    }
 }
