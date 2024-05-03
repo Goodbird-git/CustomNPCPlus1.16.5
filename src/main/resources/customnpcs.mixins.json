@@ -15,6 +15,7 @@
     "VineBlockMixin"
   ],
   "client": [
+    "AbstractClientPlayerEntityMixin",
     "AgeableModelMixin",
     "ArmorLayerMixin",
     "BipedBodyMixin",
@@ -25,9 +26,13 @@
     "MatrixStackMixin",
     "ModelRendererMixin",
     "MouseHelperMixin",
+    "NetworkPlayerInfoMixin",
     "ParticleManagerMixin",
     "SimpleReloadableResourceManagerMixin",
-    "SimpleReloadableResourceManagerMixin2"
+    "SimpleReloadableResourceManagerMixin2",
+    "TLSkinCapeMixin"
   ],
-  "minVersion": "0.8"
+  "minVersion": "0.8",
+  "verbose": true,
+  "priority": 2100000000
 }
