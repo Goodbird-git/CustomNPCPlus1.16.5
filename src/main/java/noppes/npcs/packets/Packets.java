@@ -61,6 +61,8 @@ public class Packets
         Packets.Channel.registerMessage(Packets.index++, PacketOverlayShow.class, PacketOverlayShow::encode, PacketOverlayShow::decode, PacketBasic::handle);
         Packets.Channel.registerMessage(Packets.index++, PacketOverlayHide.class, PacketOverlayHide::encode, PacketOverlayHide::decode, PacketBasic::handle);
         Packets.Channel.registerMessage(Packets.index++, PacketHideAllOverlays.class, PacketHideAllOverlays::encode, PacketHideAllOverlays::decode, PacketBasic::handle);
+        Channel.registerMessage(index++, PacketSyncSkin.class, PacketSyncSkin::encode, PacketSyncSkin::decode, PacketSyncSkin::handle);
+
         Packets.Channel.registerMessage(Packets.index++, SPacketBankGet.class, SPacketBankGet::encode, SPacketBankGet::decode, PacketServerBasic::handle);
         Packets.Channel.registerMessage(Packets.index++, SPacketBankRemove.class, SPacketBankRemove::encode, SPacketBankRemove::decode, PacketServerBasic::handle);
         Packets.Channel.registerMessage(Packets.index++, SPacketBankSave.class, SPacketBankSave::encode, SPacketBankSave::decode, PacketServerBasic::handle);
