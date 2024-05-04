@@ -24,6 +24,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.IWorldReader;
+import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
@@ -192,9 +193,17 @@ public class NPCSpawning {
         }
     }
 
+    public static float getLightLevel(World level, BlockPos pos){
+        int blockLight = level.getBrightness(LightType.BLOCK,pos);
+        int skyLight = level.getBrightness(LightType.SKY,pos);
+        int skyDarken = level.getSkyDarken();
+        float skyLightValue = (11f-skyDarken)*15f/11f;
+        return Math.max(blockLight, skyLight/15f*skyLightValue);
+    }
+
     public static boolean canCreatureTypeSpawnAtLocation(SpawnData data, World level, BlockPos pos) {
         if (level.getWorldBorder().isWithinBounds(pos) && level.noCollision(CustomEntities.entityCustomNpc.getAABB((double)pos.getX(), (double)pos.getY(), (double)pos.getZ()))) {
-            if (data.type == 1 && level.getLightEmission(pos) > 8 || data.type == 2 && level.getLightEmission(pos) <= 8) {
+            if (data.type == 1 && getLightLevel(level, pos) > 8 || data.type == 2 && getLightLevel(level, pos) <= 8) {
                 return false;
             } else {
                 BlockState state = level.getBlockState(pos);
