@@ -31,6 +31,8 @@ public class ContainerCustomGui extends Container
     public void setGui(final CustomGuiWrapper gui, final PlayerEntity player) {
         this.customGui = gui;
         int index = 0;
+        slots.clear();
+        lastSlots.clear();
         for (final IItemSlot slot : this.customGui.getSlots()) {
             this.addSlot(new CustomGuiSlot(this.guiInventory, index, slot, player));
             this.guiInventory.setItem(index, slot.getStack().getMCItemStack());
