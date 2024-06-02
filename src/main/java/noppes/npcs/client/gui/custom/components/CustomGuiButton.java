@@ -23,6 +23,7 @@ public class CustomGuiButton extends Button implements IGuiComponent
     boolean hovered;
     String label;
     int colour;
+    boolean centered;
     List<TranslationTextComponent> hoverText;
     public int id;
 
@@ -35,6 +36,7 @@ public class CustomGuiButton extends Button implements IGuiComponent
             this.textureY = component.getTextureY();
             this.texture = new ResourceLocation(component.getTexture());
         }
+        this.centered = component.isCentered();
         this.label = buttonText;
     }
 
@@ -72,7 +74,11 @@ public class CustomGuiButton extends Button implements IGuiComponent
                 j = 16777120;
             }
             matrixStack.translate(0.0, 0.0, 0.10000000149011612);
-            drawCenteredString(matrixStack, font, this.label, this.x + this.width / 2, this.y + (this.height - 8) / 2, j);
+            if(centered) {
+                drawCenteredString(matrixStack, font, this.label, this.x + this.width / 2, this.y + (this.height - 8) / 2, j);
+            }else{
+                Minecraft.getInstance().font.draw(matrixStack, this.label, 4+(float)this.x, this.y + (this.height - 8) / 2, j);
+            }
             if (this.hovered && this.hoverText != null && this.hoverText.size() > 0) {
                 this.parent.hoverText = this.hoverText;
             }
@@ -82,7 +88,11 @@ public class CustomGuiButton extends Button implements IGuiComponent
             this.hovered = (mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height);
             final int i = this.hoverState(this.hovered);
             this.blit(matrixStack, this.x, this.y, this.textureX, this.textureY + i * this.height, this.width, this.height);
-            drawCenteredString(matrixStack, font, this.label, this.x + this.width / 2, this.y + (this.height - 8) / 2, this.colour);
+            if(centered) {
+                drawCenteredString(matrixStack, font, this.label, this.x + this.width / 2, this.y + (this.height - 8) / 2, this.colour);
+            }else{
+
+            }
             if (this.hovered && this.hoverText != null && this.hoverText.size() > 0) {
                 this.parent.hoverText = this.hoverText;
             }

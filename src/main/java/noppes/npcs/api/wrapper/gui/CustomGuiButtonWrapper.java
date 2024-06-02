@@ -12,11 +12,13 @@ public class CustomGuiButtonWrapper extends CustomGuiComponentWrapper implements
     int textureX;
     int textureY;
     boolean enabled;
+    boolean centered;
 
     public CustomGuiButtonWrapper() {
         this.height = -1;
         this.textureY = -1;
         this.enabled = true;
+        this.centered = true;
     }
 
     public CustomGuiButtonWrapper(final int id, final String label, final int x, final int y) {
@@ -26,6 +28,7 @@ public class CustomGuiButtonWrapper extends CustomGuiComponentWrapper implements
         this.setID(id);
         this.setLabel(label);
         this.setPos(x, y);
+        this.centered = true;
     }
 
     public CustomGuiButtonWrapper(final int id, final String label, final int x, final int y, final int width, final int height) {
@@ -154,6 +157,7 @@ public class CustomGuiButtonWrapper extends CustomGuiComponentWrapper implements
             nbt.putIntArray("texPos", new int[] { this.textureX, this.textureY });
         }
         nbt.putBoolean("enabled", this.enabled);
+        nbt.putBoolean("centered", this.centered);
         return nbt;
     }
 
@@ -171,6 +175,19 @@ public class CustomGuiButtonWrapper extends CustomGuiComponentWrapper implements
             this.setTextureOffset(nbt.getIntArray("texPos")[0], nbt.getIntArray("texPos")[1]);
         }
         this.setEnabled(nbt.getBoolean("enabled"));
+        if(nbt.contains("centered")){
+            this.setCentered(nbt.getBoolean("centered"));
+        }else{
+            this.setCentered(true);
+        }
         return this;
+    }
+
+    public boolean isCentered() {
+        return centered;
+    }
+
+    public void setCentered(boolean centered) {
+        this.centered = centered;
     }
 }
