@@ -112,6 +112,8 @@ public class CustomGuiEntityDisplayWrapper extends CustomGuiComponentWrapper imp
         compound.putFloat("scale", this.scale);
         compound.putBoolean("followCursor", isFollowingCursor);
         compound.putInt("entityId", entityId);
+        compound.putInt("width", width);
+        compound.putInt("height", height);
         return compound;
     }
 
@@ -122,6 +124,7 @@ public class CustomGuiEntityDisplayWrapper extends CustomGuiComponentWrapper imp
         this.setScale(compound.getFloat("scale"));
         this.isFollowingCursor = compound.getBoolean("followCursor");
         this.entityId = compound.getInt("entityId");
+        this.setHoverBox(compound.getInt("width"), compound.getInt("height"));
         return this;
     }
 }

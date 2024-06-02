@@ -59,8 +59,9 @@ public class CustomGuiEntityDisplay extends Widget implements IGuiComponent {
             if (this.entity != null) {
                 drawEntity(this.entity, this.x, this.y, this.component.getScale(), this.component.getRotation() / 2 + 180, mouseX, mouseY, (float)this.width / 2.0F, (float)this.height * 0.9F);
             }
-
-            boolean hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
+            int x = GuiCustom.guiLeft + this.x;
+            int y = GuiCustom.guiTop + this.y;
+            boolean hovered = mouseX >= x && mouseY >= y && mouseX < x + this.width && mouseY < y + this.height;
             if (hovered && this.component.hasHoverText()) {
                 this.parent.hoverText = this.component.getHoverTextList();
             }
@@ -112,8 +113,8 @@ public class CustomGuiEntityDisplay extends Widget implements IGuiComponent {
             scale = 2.0F / entity.getBbHeight();
         }
 
-        float f7 = parent.getGuiLeft() + (float)x - (float)xMouse;
-        float f8 = (parent.getGuiTop() + (float)y - 50.0F * scale * zoomed) * (entity.getBbHeight() / entity.getEyeHeight()) - (float)yMouse;
+        float f7 = GuiCustom.guiLeft + (float)x - (float)xMouse;
+        float f8 = (GuiCustom.guiTop + (float)y - 50.0F * scale * zoomed) * (entity.getBbHeight() / entity.getEyeHeight()) - (float)yMouse;
         if(component.isFollowingCursor) {
             entity.yRot = ((float) Math.atan((double) (f7 / 80.0F)) * 40.0F + (float) rotation);
             entity.xRot = (-((float) Math.atan((double) (f8 / 40.0F))) * 20.0F);
