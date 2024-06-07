@@ -50,6 +50,10 @@ public class DataAI implements INPCAi {
     public int movingPattern;
     public boolean movingPause;
 
+    public boolean mountControl;
+
+    public boolean lookAtTarget;
+
     public DataAI(final EntityNPCInterface npc) {
         this.onAttack = 0;
         this.doorInteract = 2;
@@ -80,6 +84,8 @@ public class DataAI implements INPCAi {
         this.movingPos = 0;
         this.movingPattern = 0;
         this.movingPause = true;
+        this.mountControl = false;
+        this.lookAtTarget = false;
         this.npc = npc;
     }
 
@@ -116,6 +122,8 @@ public class DataAI implements INPCAi {
             final int[] startPos = compound.getIntArray("StartPosNew");
             this.setStartPos(new BlockPos(startPos[0], startPos[1], startPos[2]));
         }
+        this.mountControl = compound.getBoolean("MountControl");
+        this.lookAtTarget = compound.getBoolean("LookAtTarget");
     }
 
     public CompoundNBT save(final CompoundNBT compound) {
@@ -149,6 +157,8 @@ public class DataAI implements INPCAi {
         this.setAvoidsWater(this.avoidsWater);
         compound.putIntArray("StartPosNew", this.getStartArray());
         compound.putBoolean("AttackInvisible", this.attackInvisible);
+        compound.putBoolean("MountControl", this.mountControl);
+        compound.putBoolean("LookAtTarget", this.lookAtTarget);
         return compound;
     }
 

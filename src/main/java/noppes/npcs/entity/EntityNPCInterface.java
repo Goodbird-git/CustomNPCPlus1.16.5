@@ -77,6 +77,7 @@ import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.ServerChatEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import noppes.npcs.CustomItems;
 import noppes.npcs.CustomNpcs;
@@ -156,6 +157,8 @@ import noppes.npcs.roles.RoleCompanion;
 import noppes.npcs.roles.RoleFollower;
 import noppes.npcs.roles.RoleInterface;
 import noppes.npcs.util.GameProfileAlt;
+
+import javax.annotation.Nullable;
 
 public abstract class EntityNPCInterface extends CreatureEntity implements IEntityAdditionalSpawnData, IRangedAttackMob {
     public static final DataParameter<Boolean> Attacking;
@@ -270,6 +273,16 @@ public abstract class EntityNPCInterface extends CreatureEntity implements IEnti
 
     public boolean isPushedByFluid() {
         return this.ais.movementType != 2;
+    }
+
+    @Nullable
+    public Entity getControllingPassenger() {
+        return (this.getPassengers().isEmpty() || !this.ais.mountControl) ? null : (Entity)this.getPassengers().get(0);
+    }
+
+    @Override
+    public boolean canBeControlledByRider() {
+        return this.ais.mountControl;
     }
 
     private void registerBaseAttributes() {
@@ -1480,6 +1493,7 @@ public abstract class EntityNPCInterface extends CreatureEntity implements IEnti
         compound.put("Armor", NBTTags.nbtIItemStackMap(this.inventory.armor));
         compound.put("Weapons", NBTTags.nbtIItemStackMap(this.inventory.weapons));
         compound.putInt("Speed", this.ais.getWalkingSpeed());
+        compound.putBoolean("MountControl", this.ais.mountControl);
         compound.putBoolean("DeadBody", this.stats.hideKilledBody);
         compound.putInt("StandingState", this.ais.getStandingType());
         compound.putInt("MovingState", this.ais.getMovingType());
@@ -1524,6 +1538,7 @@ public abstract class EntityNPCInterface extends CreatureEntity implements IEnti
         this.ais.setWalkingSpeed(compound.getInt("Speed"));
         this.stats.hideKilledBody = compound.getBoolean("DeadBody");
         this.ais.setStandingType(compound.getInt("StandingState"));
+        this.ais.mountControl = compound.getBoolean("MountControl");
         this.ais.setMovingType(compound.getInt("MovingState"));
         this.ais.orientation = compound.getInt("Orientation");
         this.ais.bodyOffsetX = compound.getFloat("PositionXOffset");
@@ -1743,12 +1758,30 @@ public abstract class EntityNPCInterface extends CreatureEntity implements IEnti
 
     public void travel(Vector3d travelVector) {
         BlockPos pos = this.blockPosition();
-        super.travel(travelVector);
+        if (this.isAlive() && this.isVehicle() && this.ais.mountControl && this.getControllingPassenger() != null) {
+            LivingEntity livingentity = (LivingEntity) this.getControllingPassenger();
+            this.yRot = livingentity.yRot;
+            this.yRotO = this.yRot;
+            this.xRot = livingentity.xRot * 0.5F;
+            this.setRot(this.yRot, this.xRot);
+            this.yBodyRot = this.yRot;
+            this.yHeadRot = this.yBodyRot;
+            float f = livingentity.xxa * 0.5F;
+            float f1 = livingentity.zza;
+            if (f1 <= 0.0F) {
+                f1 *= 0.25F;
+            }
+            this.maxUpStep = 1.0F;
+            super.travel(new Vector3d(f, travelVector.y, f1));
+        } else {
+            this.maxUpStep = 0.5F;
+            this.flyingSpeed = 0.02F;
+            super.travel(travelVector);
+        }
         if (this.role.getType() == 6 && !this.isClientSide()) {
             BlockPos delta = this.blockPosition().subtract(pos);
-            ((RoleCompanion)this.role).addMovementStat((double)delta.getX(), (double)delta.getY(), (double)delta.getZ());
+            ((RoleCompanion) this.role).addMovementStat(delta.getX(), delta.getY(), delta.getZ());
         }
-
     }
 
     public boolean canBeLeashed(PlayerEntity player) {
