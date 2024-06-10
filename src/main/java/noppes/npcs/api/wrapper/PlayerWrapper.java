@@ -31,6 +31,7 @@ import noppes.npcs.api.entity.data.IPlayerMail;
 import noppes.npcs.api.gui.ICustomGui;
 import noppes.npcs.api.handler.data.IQuest;
 import noppes.npcs.api.item.IItemStack;
+import noppes.npcs.api.overlay.IOverlay;
 import noppes.npcs.api.wrapper.gui.CustomGuiWrapper;
 import noppes.npcs.client.EntityUtil;
 import noppes.npcs.constants.EnumGuiType;
@@ -619,5 +620,20 @@ public class PlayerWrapper<T extends ServerPlayerEntity> extends EntityLivingBas
     @Override
     public void trigger(final int id, final Object... arguments) {
         EventHooks.onScriptTriggerEvent(PlayerData.get(this.entity).scriptData, id, this.getWorld(), this.getPos(), null, arguments);
+    }
+
+    @Override
+    public void showOverlay(final IOverlay overlay) {
+        Packets.send(this.entity, new PacketOverlayShow(overlay.toNbt()));
+    }
+
+    @Override
+    public void hideOverlay(final int id) {
+        Packets.send(this.entity, new PacketOverlayHide(id));
+    }
+
+    @Override
+    public void hideAllOverlays() {
+        Packets.send(this.entity, new PacketHideAllOverlays(true));
     }
 }
