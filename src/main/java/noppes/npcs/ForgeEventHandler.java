@@ -38,9 +38,6 @@ public class ForgeEventHandler
                 if (ev2.getEntity() == null || !(ev2.getEntity().level instanceof ServerWorld)) {
                     return;
                 }
-                if (event instanceof PlayerXpEvent) {
-                    LogWriter.info(event);
-                }
                 EventHooks.onForgeEntityEvent(ev2);
             }
             else if (event instanceof WorldEvent) {
