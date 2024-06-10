@@ -9,6 +9,7 @@ public class CustomGuiButtonWrapper extends CustomGuiComponentWrapper implements
     int height;
     String label;
     String texture;
+    String soundPath;
     int textureX;
     int textureY;
     boolean enabled;
@@ -19,6 +20,7 @@ public class CustomGuiButtonWrapper extends CustomGuiComponentWrapper implements
         this.textureY = -1;
         this.enabled = true;
         this.centered = true;
+        this.soundPath = "ui.button.click";
     }
 
     public CustomGuiButtonWrapper(final int id, final String label, final int x, final int y) {
@@ -29,6 +31,7 @@ public class CustomGuiButtonWrapper extends CustomGuiComponentWrapper implements
         this.setLabel(label);
         this.setPos(x, y);
         this.centered = true;
+        this.soundPath = "ui.button.click";
     }
 
     public CustomGuiButtonWrapper(final int id, final String label, final int x, final int y, final int width, final int height) {
@@ -158,6 +161,7 @@ public class CustomGuiButtonWrapper extends CustomGuiComponentWrapper implements
         }
         nbt.putBoolean("enabled", this.enabled);
         nbt.putBoolean("centered", this.centered);
+        nbt.putString("soundPath", this.soundPath);
         return nbt;
     }
 
@@ -180,6 +184,11 @@ public class CustomGuiButtonWrapper extends CustomGuiComponentWrapper implements
         }else{
             this.setCentered(true);
         }
+        if(nbt.contains("soundPath")) {
+            this.soundPath = nbt.getString("soundPath");
+        }else{
+            this.soundPath = "ui.button.click";
+        }
         return this;
     }
 
@@ -189,5 +198,13 @@ public class CustomGuiButtonWrapper extends CustomGuiComponentWrapper implements
 
     public void setCentered(boolean centered) {
         this.centered = centered;
+    }
+
+    public String getSoundPath() {
+        return soundPath;
+    }
+
+    public void setSoundPath(String soundPath) {
+        this.soundPath = soundPath;
     }
 }
