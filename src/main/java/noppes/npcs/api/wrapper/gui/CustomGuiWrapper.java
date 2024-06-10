@@ -184,6 +184,18 @@ public class CustomGuiWrapper implements ICustomGui
         return component;
     }
 
+    public IEntityDisplay addEntityDisplay(int id, int x, int y, int width, int height, IEntity entity){
+        IEntityDisplay display = new CustomGuiEntityDisplayWrapper(id, x, y, width, height, entity);
+        this.components.add(display);
+        return display;
+    }
+
+    public IColoredLine addColoredLine(int id, int xStart, int yStart, int xEnd, int yEnd, int color, float thickness){
+        IColoredLine line = new CustomGuiColoredLineWrapper(id, xStart, yStart, xEnd, yEnd, color, thickness);
+        this.components.add(line);
+        return line;
+    }
+
     @Override
     public void showPlayerInventory(final int x, final int y) {
         this.showPlayerInv = true;

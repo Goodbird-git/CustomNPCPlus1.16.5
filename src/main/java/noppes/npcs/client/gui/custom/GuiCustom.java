@@ -137,6 +137,16 @@ public class GuiCustom extends ContainerScreen<ContainerCustomGui> implements IC
                 this.components.put(scroll.getID(), scroll);
                 break;
             }
+            case 7: {
+                final CustomGuiEntityDisplay display = new CustomGuiEntityDisplay(this, (CustomGuiEntityDisplayWrapper) component);
+                this.components.put(display.getID(), display);
+                break;
+            }
+            case 8: {
+                final CustomGuiColoredLine display = new CustomGuiColoredLine(this, (CustomGuiColoredLineWrapper) component);
+                this.components.put(display.getID(), display);
+                break;
+            }
         }
     }
 
