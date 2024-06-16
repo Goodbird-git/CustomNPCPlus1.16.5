@@ -11,6 +11,7 @@ import noppes.npcs.api.gui.ICustomGuiComponent;
 import noppes.npcs.api.wrapper.gui.CustomGuiColoredLineWrapper;
 import noppes.npcs.client.gui.custom.GuiCustom;
 import noppes.npcs.client.gui.custom.interfaces.IGuiComponent;
+import org.lwjgl.opengl.GL11;
 
 public class CustomGuiColoredLine extends Widget implements IGuiComponent {
     private GuiCustom parent;
@@ -40,38 +41,23 @@ public class CustomGuiColoredLine extends Widget implements IGuiComponent {
 
     public void onRender(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         if (this.visible) {
-            float xBeg = GuiCustom.guiLeft + Math.min(this.x, this.component.getXEnd());
-            float yBeg = GuiCustom.guiTop + Math.min(this.y, this.component.getYEnd());
-            float xEnd = GuiCustom.guiLeft + Math.max(this.x, this.component.getXEnd());
-            float yEnd = GuiCustom.guiTop + Math.max(this.y, this.component.getYEnd());
-            float xVec = xEnd - xBeg;
-            float yVec = yEnd - yBeg;
-            float xPerp = 1, yPerp = 1;
-            if (xVec != 0) {
-                xPerp = -yVec * yPerp / xVec;
-            } else {
-                yPerp = -xVec * xPerp / yVec;
-            }
-            float perpLen = (float) Math.sqrt(xPerp * xPerp + yPerp * yPerp);
-            xPerp /= perpLen;
-            yPerp /= perpLen;
-            xPerp *= component.getThickness() / 2;
-            yPerp *= component.getThickness() / 2;
+            RenderSystem.enableBlend();
+            RenderSystem.disableTexture();
+            RenderSystem.defaultBlendFunc();
+
             int color = component.getColor();
             int r = color >> 24 & 0xff;
             int g = color >> 16 & 0xff;
             int b = color >> 8 & 0xff;
             int a = color & 0xff;
-            RenderSystem.enableBlend();
-            RenderSystem.disableTexture();
-            RenderSystem.defaultBlendFunc();
+
+            GL11.glLineWidth(component.getThickness());
             BufferBuilder builder = Tessellator.getInstance().getBuilder();
-            builder.begin(7, DefaultVertexFormats.POSITION_COLOR);
-            builder.vertex(matrixStack.last().pose(), xEnd + xPerp, yEnd + yPerp, getBlitOffset()).color(r, g, b, a).endVertex();
-            builder.vertex(matrixStack.last().pose(), xEnd - xPerp, yEnd - yPerp, getBlitOffset()).color(r, g, b, a).endVertex();
-            builder.vertex(matrixStack.last().pose(), xBeg - xPerp, yBeg - yPerp, getBlitOffset()).color(r, g, b, a).endVertex();
-            builder.vertex(matrixStack.last().pose(), xBeg + xPerp, yBeg + yPerp, getBlitOffset()).color(r, g, b, a).endVertex();
+            builder.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
+            builder.vertex(matrixStack.last().pose(), GuiCustom.guiLeft + this.x, GuiCustom.guiTop + this.y, getBlitOffset()).color(r, g, b, a).endVertex();
+            builder.vertex(matrixStack.last().pose(), GuiCustom.guiLeft + this.component.getXEnd(), GuiCustom.guiTop + this.component.getYEnd(), getBlitOffset()).color(r, g, b, a).endVertex();
             Tessellator.getInstance().end();
+
             RenderSystem.enableTexture();
             RenderSystem.disableBlend();
         }
