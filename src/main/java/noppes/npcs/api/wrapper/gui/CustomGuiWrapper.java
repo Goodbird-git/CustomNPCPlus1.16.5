@@ -196,6 +196,12 @@ public class CustomGuiWrapper implements ICustomGui
         return line;
     }
 
+    public IItemRenderer addItemRenderer(int id, final int x, final int y, int width, int height, final IItemStack stack) {
+        final CustomGuiItemRendererWrapper rendererWrapper = new CustomGuiItemRendererWrapper(id, x, y, width, height, stack);
+        this.components.add(rendererWrapper);
+        return rendererWrapper;
+    }
+
     @Override
     public void showPlayerInventory(final int x, final int y) {
         this.showPlayerInv = true;

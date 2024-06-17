@@ -151,6 +151,9 @@ public abstract class CustomGuiComponentWrapper implements ICustomGuiComponent
             case 8: {
                 return new CustomGuiColoredLineWrapper().fromNBT(nbt);
             }
+            case 9: {
+                return new CustomGuiItemRendererWrapper().fromNBT(nbt);
+            }
             default: {
                 return null;
             }
