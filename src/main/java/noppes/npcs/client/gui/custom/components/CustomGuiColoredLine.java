@@ -54,8 +54,8 @@ public class CustomGuiColoredLine extends Widget implements IGuiComponent {
             GL11.glLineWidth(component.getThickness());
             BufferBuilder builder = Tessellator.getInstance().getBuilder();
             builder.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
-            builder.vertex(matrixStack.last().pose(), GuiCustom.guiLeft + this.x, GuiCustom.guiTop + this.y, getBlitOffset()).color(r, g, b, a).endVertex();
-            builder.vertex(matrixStack.last().pose(), GuiCustom.guiLeft + this.component.getXEnd(), GuiCustom.guiTop + this.component.getYEnd(), getBlitOffset()).color(r, g, b, a).endVertex();
+            builder.vertex(matrixStack.last().pose(), GuiCustom.guiLeft + this.x, GuiCustom.guiTop + this.y, id).color(r, g, b, a).endVertex();
+            builder.vertex(matrixStack.last().pose(), GuiCustom.guiLeft + this.component.getXEnd(), GuiCustom.guiTop + this.component.getYEnd(), id).color(r, g, b, a).endVertex();
             Tessellator.getInstance().end();
 
             RenderSystem.enableTexture();
