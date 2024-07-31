@@ -21,6 +21,8 @@ public class GuiNpcAI extends GuiNPCInterface2 implements ITextfieldListener, IG
     private String[] tacts;
     private DataAI ai;
 
+    private boolean useCenteredText = false;
+
     public GuiNpcAI(final EntityNPCInterface npc) {
         super(npc, 3);
         this.tacts = new String[] { "aitactics.rush", "aitactics.stagger", "aitactics.orbit", "aitactics.hitandrun", "aitactics.ambush", "aitactics.stalk", "gui.none" };
@@ -52,10 +54,15 @@ public class GuiNpcAI extends GuiNPCInterface2 implements ITextfieldListener, IG
         this.addLabel(new GuiLabel(2, "ai.movement", this.guiLeft + 4, this.guiTop + 165));
         this.addButton(new GuiButtonNop(this, 2, this.guiLeft + 86, this.guiTop + 160, 60, 20, "selectServer.edit"));
 
+        this.addLabel(new GuiLabel(27, "Texto Centrado", this.guiLeft + 150, this.guiTop + 120));
+        this.addButton(new GuiButtonNop(this, 27, this.guiLeft + 230, this.guiTop + 120, 60, 20, new String[] { "gui.no", "gui.yes" }, npc.ais.textoCentrado ? 1 : 0));
+        this.useCenteredText = npc.ais.textoCentrado;
+
         this.addLabel(new GuiLabel(25, "Mount Control", this.guiLeft + 150, this.guiTop + 90));
         this.addButton(new GuiButtonNop(this, 16, this.guiLeft + 230, this.guiTop + 85, 60, 20, new String[] { "gui.no", "gui.yes" }, (int)(this.npc.ais.mountControl ? 1 : 0)));
 //        this.addLabel(new GuiLabel(26, "ai.lookattarget", this.guiLeft + 150, this.guiTop + 115));
 //        this.addButton(new GuiButtonNop(this, 17, this.guiLeft + 230, this.guiTop + 110, 60, 20, new String[] { "gui.no", "gui.yes" }, (int)(this.npc.ais.lookAtTarget ? 1 : 0)));
+
     }
 
     @Override
@@ -101,6 +108,12 @@ public class GuiNpcAI extends GuiNPCInterface2 implements ITextfieldListener, IG
         }
         else if (button.id == 17) {
             this.ai.lookAtTarget = (button.getValue() == 1);
+        }
+        else if (button.id == 27) {
+            this.useCenteredText = (button.getValue() == 1);
+            this.npc.ais.textoCentrado = this.useCenteredText; // Actualiza el estado en el modelo de datos
+            save(); // Guarda los cambios
+            this.init(); // Actualiza la interfaz para reflejar el estado actualizado
         }
     }
 

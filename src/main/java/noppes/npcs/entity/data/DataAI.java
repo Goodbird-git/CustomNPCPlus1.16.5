@@ -50,6 +50,8 @@ public class DataAI implements INPCAi {
     public int movingPattern;
     public boolean movingPause;
 
+    public boolean textoCentrado;
+
     public boolean mountControl;
 
     public boolean lookAtTarget;
@@ -85,6 +87,7 @@ public class DataAI implements INPCAi {
         this.movingPattern = 0;
         this.movingPause = true;
         this.mountControl = false;
+        this.textoCentrado = false;
         this.lookAtTarget = false;
         this.npc = npc;
     }
@@ -123,6 +126,7 @@ public class DataAI implements INPCAi {
             this.setStartPos(new BlockPos(startPos[0], startPos[1], startPos[2]));
         }
         this.mountControl = compound.getBoolean("MountControl");
+        this.textoCentrado = compound.getBoolean("TextoCentrado");
         this.lookAtTarget = compound.getBoolean("LookAtTarget");
     }
 
@@ -158,6 +162,7 @@ public class DataAI implements INPCAi {
         compound.putIntArray("StartPosNew", this.getStartArray());
         compound.putBoolean("AttackInvisible", this.attackInvisible);
         compound.putBoolean("MountControl", this.mountControl);
+        compound.putBoolean("TextoCentrado", this.textoCentrado);
         compound.putBoolean("LookAtTarget", this.lookAtTarget);
         return compound;
     }

@@ -47,11 +47,14 @@ public class GuiDialogModern extends GuiNPCInterface implements IGuiClose {
     private final ResourceLocation decomposed = new ResourceLocation("customnpcs", "textures/gui/dialog_menu_decomposed.png");
     private boolean isGrabbed = false;
 
+    private boolean useCenteredText = false;
+
     public GuiDialogModern(EntityNPCInterface npc, Dialog dialog) {
         super(npc);
         this.dialog = dialog;
         this.appendDialog(dialog);
         this.imageHeight = 238;
+        this.useCenteredText = npc.ais.textoCentrado;
     }
 
     public void init() {
@@ -59,6 +62,7 @@ public class GuiDialogModern extends GuiNPCInterface implements IGuiClose {
         this.isGrabbed = false;
         this.grabMouse(this.dialog.showWheel);
         this.guiTop = this.height - this.imageHeight;
+        this.useCenteredText = this.npc.ais.textoCentrado;
     }
 
     public void grabMouse(boolean grab) {
@@ -87,7 +91,8 @@ public class GuiDialogModern extends GuiNPCInterface implements IGuiClose {
                 drawNpc(npc, -210 + (int) (300 * (1 - wcoeff)), 350 - (int) (100 * (1 - hcoeff)), (float) (9.5F * hcoeff), -20);
             }
         }
-        int textBlockWidth = 700;
+        int screenWidth = this.width; // Obtén el ancho de la pantalla
+        int textBlockWidth = (int) (screenWidth * 0.7); // Ajusta el ancho del cuadro de texto al 70% del ancho de la pantalla
         int lineCount = getLineCount(dialog.text, textBlockWidth);
         int gap = Math.max(16, Math.min((int) (2.6f * (float) lineCount), 32));
         int textPartHeight = 23 + 3 + lineCount * ClientProxy.Font.height(null) + 2 * gap;
@@ -98,29 +103,52 @@ public class GuiDialogModern extends GuiNPCInterface implements IGuiClose {
         matrixStack.scale(1.5f, 1.5f, 1);
         AbstractGui.drawString(matrixStack, font, npc.getDisplayName(), (int) (47 / 1.5), (int) ((height - textPartHeight + 5) / 1.5), -1);
         matrixStack.scale(1 / 1.5f, 1 / 1.5f, 1);
-        drawTextBlock(matrixStack, dialog.text, (width - textBlockWidth) / 2, height - textPartHeight + 23 + 3 + gap, textBlockWidth);
+        int textX = (width - textBlockWidth) / 2; // Centra el texto horizontalmente
+        int textY = height - textPartHeight + 23 + 3 + gap;  //auto escalado de temaño de interfaz
+        drawTextBlock(matrixStack, dialog.text, textX, textY, textBlockWidth);  //auto escalado de temaño de interfaz
         selected = -1;
         matrixStack.scale((float) wcoeff, (float) wcoeff, (float) wcoeff);
+        int accumulatedHeight = 0;  // Altura acumulada de las opciones anteriores
         for (int i = 0; i < this.options.size(); i++) {
-            int optionHeight = (int) (220 * hcoeff + i * (13 + 6));
             int optionNum = options.get(i);
             DialogOption option = dialog.options.get(optionNum);
+            int optionHeight = (int) (220 * hcoeff + accumulatedHeight);
+
+            // Calcular el ancho máximo necesario para todas las líneas del título
+            String[] titleLines = option.title.split("\\\\n");
+            int optionWidth = 0;
+            for (String line : titleLines) {
+                int lineWidth = this.font.width(line);
+                optionWidth = Math.max(optionWidth, lineWidth);
+            }
+            optionWidth += 32; // Ajustar según necesidades visuales
+
             if (mouseX >= 723 * wcoeff && mouseX <= 946 * wcoeff && mouseY >= optionHeight * wcoeff && mouseY <= (optionHeight + 13) * wcoeff) {
                 selected = i;
             }
             RenderSystem.enableBlend();
             this.minecraft.getTextureManager().bind(decomposed);
-            this.blit(matrixStack, 723, optionHeight, 0, i == selected ? 13 : 0, 223, 13);
+            this.blit(matrixStack, 723, optionHeight, 0, i == selected ? 13 : 0, optionWidth, 13);
             RenderSystem.disableBlend();
             if (getQuestByOptionId(optionNum) != null) {
                 drawString(matrixStack, this.font, "!", 727, optionHeight + 3, 0x76e85b);
             } else {
                 drawString(matrixStack, this.font, ">", 727, optionHeight + 3, -1);
             }
-            drawString(matrixStack, this.font, option.title, 735, optionHeight + 3, option.optionColor);
+
+            // Renderizar cada línea del título
+            int lineOffset = 0;
+            for (String line : titleLines) {
+                if (!line.isEmpty()) {
+                    drawString(matrixStack, this.font, line, 735, optionHeight + 3 + lineOffset, option.optionColor);
+                    lineOffset += 12; // Ajustar según el tamaño de fuente y el espaciado deseado
+                }
+            }
+            accumulatedHeight += 13 + 6 + lineOffset;
         }
         matrixStack.popPose();
     }
+
 
     public Quest getQuestByOptionId(int id) {
         DialogOption option = dialog.options.get(id);
@@ -261,17 +289,29 @@ public class GuiDialogModern extends GuiNPCInterface implements IGuiClose {
         this.grabMouse(false);
         Packets.sendServer(new SPacketQuestCompletionCheckAll());
     }
+    // Método para manejar el evento de un botón u otro evento que cambie la configuración
+
+    public void toggleTextAlignment() {
+        useCenteredText = !useCenteredText;
+        npc.ais.textoCentrado = useCenteredText;
+    }
 
     public void drawTextBlock(MatrixStack stack, String text, int x, int y, int width) {
         TextBlockClient block = new TextBlockClient("", text, width, -1, player, npc);
 
         int count = 0;
-        for (Iterator<ITextComponent> var9 = block.lines.iterator(); var9.hasNext(); count++) {
-            ITextComponent line = var9.next();
+        for (Iterator<ITextComponent> iterator = block.lines.iterator(); iterator.hasNext(); count++) {
+            ITextComponent line = iterator.next();
             int height = y + count * ClientProxy.Font.height(null);
-            AbstractGui.drawCenteredString(stack, font, line, x + width / 2, height, -1);
+
+            if (useCenteredText) {
+                AbstractGui.drawCenteredString(stack, font, line, x + width / 2, height, -1);
+            } else {
+                AbstractGui.drawString(stack, font, line, x, height, -1);
+            }
         }
     }
+
 
     public int getLineCount(String text, int width) {
         TextBlockClient block = new TextBlockClient("", text, width, -1, player, npc);

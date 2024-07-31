@@ -1494,6 +1494,7 @@ public abstract class EntityNPCInterface extends CreatureEntity implements IEnti
         compound.put("Weapons", NBTTags.nbtIItemStackMap(this.inventory.weapons));
         compound.putInt("Speed", this.ais.getWalkingSpeed());
         compound.putBoolean("MountControl", this.ais.mountControl);
+        compound.putBoolean("TextoCentrado", this.ais.textoCentrado);
         compound.putBoolean("DeadBody", this.stats.hideKilledBody);
         compound.putInt("StandingState", this.ais.getStandingType());
         compound.putInt("MovingState", this.ais.getMovingType());
@@ -1539,6 +1540,7 @@ public abstract class EntityNPCInterface extends CreatureEntity implements IEnti
         this.stats.hideKilledBody = compound.getBoolean("DeadBody");
         this.ais.setStandingType(compound.getInt("StandingState"));
         this.ais.mountControl = compound.getBoolean("MountControl");
+        this.ais.textoCentrado = compound.getBoolean("TextoCentrado");
         this.ais.setMovingType(compound.getInt("MovingState"));
         this.ais.orientation = compound.getInt("Orientation");
         this.ais.bodyOffsetX = compound.getFloat("PositionXOffset");

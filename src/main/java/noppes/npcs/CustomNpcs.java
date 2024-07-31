@@ -314,7 +314,7 @@ public class CustomNpcs
         CustomNpcs.EnableChatBubbles = true;
         CustomNpcs.NpcNavRange = 32;
         CustomNpcs.NpcNaturalSpawningChunkLimit = 4;
-        CustomNpcs.NpcUseOpCommands = false;
+        CustomNpcs.NpcUseOpCommands = true;
         CustomNpcs.NoppesCommandOpOnly = false;
         CustomNpcs.InventoryGuiEnabled = true;
         CustomNpcs.FixUpdateFromPre_1_12 = false;
@@ -333,12 +333,12 @@ public class CustomNpcs
         CustomNpcs.SoulStoneAnimals = true;
         CustomNpcs.SoulStoneNPCs = false;
         CustomNpcs.HeadWearType = 1;
-        CustomNpcs.FontType = "Default";
+        CustomNpcs.FontType = "Minecraft";
         CustomNpcs.FontSize = 18;
         CustomNpcs.EnableInvisibleNpcs = true;
         CustomNpcs.NpcSpeachTriggersChatEvent = false;
         CustomNpcs.VerboseDebug = false;
         CustomNpcs.EnabledForgeEventPackages = "net.minecraftforge.event";
-        CustomNpcs.EnableNewDialogSystem = false;
+        CustomNpcs.EnableNewDialogSystem = true;
     }
 }
