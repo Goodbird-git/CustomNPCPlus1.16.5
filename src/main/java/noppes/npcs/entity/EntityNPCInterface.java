@@ -50,6 +50,7 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.network.play.server.SEntityMetadataPacket;
 import net.minecraft.pathfinding.FlyingPathNavigator;
 import net.minecraft.pathfinding.GroundPathNavigator;
+import net.minecraft.pathfinding.PathNavigator;
 import net.minecraft.pathfinding.SwimmerPathNavigator;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
@@ -77,7 +78,6 @@ import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.ServerChatEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import noppes.npcs.CustomItems;
 import noppes.npcs.CustomNpcs;
@@ -111,6 +111,7 @@ import noppes.npcs.ai.EntityAIWaterNav;
 import noppes.npcs.ai.EntityAIWorldLines;
 import noppes.npcs.ai.FlyingMoveHelper;
 import noppes.npcs.ai.selector.NPCAttackSelector;
+import noppes.npcs.ai.NpcGroundPathNavigator;
 import noppes.npcs.ai.target.EntityAIClearTarget;
 import noppes.npcs.ai.target.EntityAIOwnerHurtByTarget;
 import noppes.npcs.ai.target.EntityAIOwnerHurtTarget;
@@ -777,6 +778,11 @@ public abstract class EntityNPCInterface extends CreatureEntity implements IEnti
         tasks.disabledFlags.clear();
     }
 
+    @Override
+    protected PathNavigator createNavigation(World p_175447_1_) {
+        return new NpcGroundPathNavigator(this, p_175447_1_ );
+    }
+
     private void updateTasks() {
         if (this.level != null && !this.level.isClientSide && this.level instanceof ServerWorld) {
             ServerWorld sWorld = (ServerWorld)this.level;
@@ -797,7 +803,7 @@ public abstract class EntityNPCInterface extends CreatureEntity implements IEnti
                     this.navigation = new SwimmerPathNavigator(this, this.level);
                 } else {
                     this.moveControl = new MovementController(this);
-                    this.navigation = new GroundPathNavigator(this, this.level);
+                    this.navigation = new NpcGroundPathNavigator(this, this.level);
                     this.goalSelector.addGoal(0, new EntityAIWaterNav(this));
                 }
 
