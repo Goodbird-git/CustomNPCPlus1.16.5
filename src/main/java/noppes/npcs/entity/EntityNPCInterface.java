@@ -48,10 +48,7 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.network.play.server.SEntityMetadataPacket;
-import net.minecraft.pathfinding.FlyingPathNavigator;
-import net.minecraft.pathfinding.GroundPathNavigator;
-import net.minecraft.pathfinding.PathNavigator;
-import net.minecraft.pathfinding.SwimmerPathNavigator;
+import net.minecraft.pathfinding.*;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.ActionResultType;
@@ -87,31 +84,8 @@ import noppes.npcs.NBTTags;
 import noppes.npcs.NoppesUtilServer;
 import noppes.npcs.NpcDamageSource;
 import noppes.npcs.VersionCompatibility;
-import noppes.npcs.ai.CombatHandler;
-import noppes.npcs.ai.EntityAIAnimation;
-import noppes.npcs.ai.EntityAIAttackTarget;
-import noppes.npcs.ai.EntityAIAvoidTarget;
-import noppes.npcs.ai.EntityAIBustDoor;
-import noppes.npcs.ai.EntityAIFindShade;
-import noppes.npcs.ai.EntityAIFollow;
-import noppes.npcs.ai.EntityAIJob;
-import noppes.npcs.ai.EntityAILook;
-import noppes.npcs.ai.EntityAIMoveIndoors;
-import noppes.npcs.ai.EntityAIMovingPath;
-import noppes.npcs.ai.EntityAIPanic;
-import noppes.npcs.ai.EntityAIPounceTarget;
-import noppes.npcs.ai.EntityAIRangedAttack;
-import noppes.npcs.ai.EntityAIReturn;
-import noppes.npcs.ai.EntityAIRole;
-import noppes.npcs.ai.EntityAISprintToTarget;
-import noppes.npcs.ai.EntityAITransform;
-import noppes.npcs.ai.EntityAIWander;
-import noppes.npcs.ai.EntityAIWatchClosest;
-import noppes.npcs.ai.EntityAIWaterNav;
-import noppes.npcs.ai.EntityAIWorldLines;
-import noppes.npcs.ai.FlyingMoveHelper;
+import noppes.npcs.ai.*;
 import noppes.npcs.ai.selector.NPCAttackSelector;
-import noppes.npcs.ai.NpcGroundPathNavigator;
 import noppes.npcs.ai.target.EntityAIClearTarget;
 import noppes.npcs.ai.target.EntityAIOwnerHurtByTarget;
 import noppes.npcs.ai.target.EntityAIOwnerHurtTarget;
@@ -797,7 +771,13 @@ public abstract class EntityNPCInterface extends CreatureEntity implements IEnti
                 sWorld.navigations.remove(this.getNavigation());
                 if (this.ais.movementType == 1) {
                     this.moveControl = new FlyingMoveHelper(this);
-                    this.navigation = new FlyingPathNavigator(this, this.level);
+                    this.navigation = new FlyingPathNavigator(this, this.level){
+                        protected PathFinder createPathFinder(int p_179679_1_) {
+                            this.nodeEvaluator = new AdvFlyingNodeProcessor();
+                            this.nodeEvaluator.setCanPassDoors(true);
+                            return new PathFinder(this.nodeEvaluator, p_179679_1_);
+                        }
+                    };
                 } else if (this.ais.movementType == 2) {
                     this.moveControl = new FlyingMoveHelper(this);
                     this.navigation = new SwimmerPathNavigator(this, this.level);
