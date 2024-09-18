@@ -87,7 +87,7 @@ public class GuiDialogModern extends GuiNPCInterface implements IGuiClose {
                 drawNpc(npc, -210 + (int) (300 * (1 - wcoeff)), 350 - (int) (100 * (1 - hcoeff)), (float) (9.5F * hcoeff), -20);
             }
         }
-        int textBlockWidth = 700;
+        int textBlockWidth = (int) (700d * wcoeff);
         int lineCount = getLineCount(dialog.text, textBlockWidth);
         int gap = Math.max(16, Math.min((int) (2.6f * (float) lineCount), 32));
         int textPartHeight = 23 + 3 + lineCount * ClientProxy.Font.height(null) + 2 * gap;
