@@ -30,7 +30,7 @@ public abstract class EntityNPCFlying extends EntityNPCInterface
 
     @Override
     public void travel(final Vector3d v) {
-        if (!this.canFly()) {
+        if (!this.canFly() || (this.isAlive() && this.isVehicle() && this.ais.mountControl && this.getControllingPassenger() != null)) {
             super.travel(v);
             return;
         }

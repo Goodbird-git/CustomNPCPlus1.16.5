@@ -1772,7 +1772,14 @@ public abstract class EntityNPCInterface extends CreatureEntity implements IEnti
                 f1 *= 0.25F;
             }
             this.maxUpStep = 1.0F;
-            super.travel(new Vector3d(f, travelVector.y, f1));
+            if(this.canFly()){
+                setNoGravity(true);
+                fallDistance = 0;
+                super.travel(new Vector3d(f*2, -Math.sin(Math.toRadians(this.xRot))*2, f1*2));
+            }else{
+                setNoGravity(false);
+                super.travel(new Vector3d(f, travelVector.y, f1));
+            }
         } else {
             this.maxUpStep = 0.5F;
             this.flyingSpeed = 0.02F;
